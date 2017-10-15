@@ -6,10 +6,15 @@
 /* ── Card ─────────────────────────────────────────── */
 .card {
   background: var(--card-bg);
-  border-radius: var(--radius-lg);
-  padding: var(--sp-4);
-  box-shadow: var(--shadow-card);
-  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  box-shadow: none !important; /* Force remove shadow for clean look */
+  border: 1px solid rgba(0,0,0,0.06); /* iOS style: thin border */
+  transition: var(--ease);
+}
+
+.card:active {
+  background: rgba(0, 0, 0, 0.02); /* Subtle feedback */
 }
 
 .card-sm   { padding: var(--sp-3); }
@@ -182,13 +187,13 @@
 
 .form-input {
   width: 100%;
-  height: 48px;
-  padding: 0 var(--sp-4);
-  background: var(--gray-50);
-  border: 1.5px solid var(--gray-200);
+  height: 52px;
+  padding: 0 var(--sp-5);
+  background: rgba(0, 0, 0, 0.03); /* iOS system gray 6 style */
+  border: none;
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
-  color: var(--gray-800);
+  color: var(--gray-900);
   transition: var(--ease);
   outline: none;
 }
@@ -253,10 +258,10 @@ textarea.form-input {
 .stat-card {
   background: var(--card-bg);
   border-radius: var(--radius-lg);
-  padding: var(--sp-4);
-  box-shadow: var(--shadow-card);
+  padding: var(--sp-5);
+  box-shadow: none; /* Shadowless */
   text-align: center;
-  border: 1px solid rgba(0,0,0,0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05); /* Thin border */
   transition: var(--ease);
 }
 
@@ -438,3 +443,443 @@ textarea.form-input {
   border: 1px solid rgba(0,0,0,0.03);
 }
 .list-item:active { transform: scale(0.99); background: var(--gray-50); }
+
+/* --- iOS 18+ Inspired Widgets (Ultra Clean) --- */
+.punch-card-minimal {
+  background: white;
+  border-radius: 2rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.punch-badge-ios {
+  flex: 1;
+  background: #f8fafc;
+  border-radius: 1.5rem;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid transparent;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.punch-badge-ios.active {
+  background: white;
+  border-color: rgba(81, 112, 255, 0.2);
+}
+
+.punch-badge-ios.active .punch-icon-ios {
+  transform: scale(1.1);
+  background: #5170ff;
+  color: white;
+}
+
+.punch-icon-ios {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 1rem;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  margin-bottom: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.ios-time-big {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.ios-label-small {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  letter-spacing: 0.06em;
+  margin-top: 0.5rem;
+}
+
+/* iOS Task Stack Widget */
+.task-stack-hero {
+  background: white;
+  border-radius: 2.25rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.status-pill-ios {
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 0.3rem 0.75rem;
+  border-radius: 2rem;
+  background: rgba(81, 112, 255, 0.08);
+  color: #1a44ff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.task-title-ios {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+}
+
+.task-meta-ios {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* --- iOS List Item Components (Premium Shadowless) --- */
+.notif-card-ios {
+  background: white;
+  padding: 1.25rem 0.5rem;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  gap: 1rem;
+}
+
+.notif-card-ios:active {
+  background-color: #f8fafc;
+}
+
+.notif-card-ios.unread {
+  background-color: rgba(81, 112, 255, 0.02);
+}
+
+.notif-dot-ios {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #007aff; /* Apple Blue */
+  border-radius: 999px;
+  flex-shrink: 0;
+  margin-top: 0.4rem;
+}
+
+.notif-icon-ios {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.75rem; /* iOS Soft Squircle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.task-card-ios {
+  background: #ffffff;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(255,255,255,0.8) 0, transparent 50%),
+    linear-gradient(to bottom, transparent, rgba(0,0,0,0.02));
+  border-radius: 1.5rem;
+  padding: 1.5rem 1.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.task-card-ios::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 22px 22px 0;
+  border-color: #f1f5f9 #f1f5f9 #cbd5e1 #cbd5e1; /* The fold triangle */
+  box-shadow: -2px 2px 4px rgba(0,0,0,0.04);
+  border-bottom-left-radius: 0.35rem;
+  z-index: 2;
+}
+
+.task-card-ios:active {
+  transform: scale(0.97) translateY(2px);
+}
+
+.ios-priority-pill {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ios-priority-urgent { background: #fee2e2; color: #ef4444; }
+.ios-priority-high { background: #fef3c7; color: #d97706; }
+.ios-priority-medium { background: #eff6ff; color: #3b82f6; }
+.ios-priority-low { background: #f1f5f9; color: #64748b; }
+
+.ios-task-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+  margin: 0.75rem 0;
+}
+
+/* --- iOS Profile & Settings Group --- */
+.ios-settings-group {
+  background: white;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.ios-settings-row {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  gap: 1rem;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.ios-settings-row:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 3.5rem; /* Space for the icon */
+  right: 0;
+  height: 0.5px;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.ios-settings-row:active {
+  background-color: #f8fafc;
+}
+
+.ios-settings-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* --- iOS Modal / Bottom Sheet System --- */
+.ios-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-blur: 4px;
+  z-index: 999;
+  display: flex;
+  align-items: flex-end; /* Slide from bottom */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.ios-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ios-bottom-sheet {
+  width: 100%;
+  background: white;
+  border-top-left-radius: 1.75rem;
+  border-top-right-radius: 1.75rem;
+  padding: 1.5rem 1.5rem 3rem 1.5rem;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.ios-modal-overlay.active .ios-bottom-sheet {
+  transform: translateY(0);
+}
+
+.ios-sheet-handle {
+  width: 2.5rem;
+  height: 0.25rem;
+  background: #e2e8f0;
+  border-radius: 999px;
+  margin: -0.5rem auto 1.5rem auto;
+}
+
+/* --- iOS Toggle Switch Component --- */
+.ios-switch {
+  position: relative;
+  display: inline-block;
+  width: 3.125rem; /* 50px */
+  height: 1.875rem; /* 30px */
+}
+
+.ios-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ios-switch-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #e9e9ea;
+  transition: .4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 1.875rem;
+}
+
+.ios-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 1.625rem; /* 26px */
+  width: 1.625rem; /* 26px */
+  left: 0.125rem; /* 2px */
+  bottom: 0.125rem; /* 2px */
+  background-color: white;
+  transition: .4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.ios-switch input:checked + .ios-switch-slider {
+  background-color: #34c759; /* Apple Green */
+}
+
+.ios-switch input:checked + .ios-switch-slider:before {
+  transform: translateX(1.25rem); /* 20px */
+}
+
+.ios-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ios-switch-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #e9e9ea;
+  transition: .4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 1.875rem;
+}
+
+.dark .ios-switch-slider {
+  background-color: #1e293b;
+}
+
+.ios-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 1.625rem; /* 26px */
+  width: 1.625rem; /* 26px */
+  left: 0.125rem; /* 2px */
+  bottom: 0.125rem; /* 2px */
+  background-color: white;
+  transition: .4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.ios-switch input:checked + .ios-switch-slider {
+  background-color: #34c759; /* Apple Green */
+}
+
+.ios-switch input:checked + .ios-switch-slider:before {
+  transform: translateX(1.25rem); /* 20px */
+}
+
+/* ── Dark Mode Overrides (Components) ───────────────────────── */
+html.dark .form-input {
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+html.dark .form-input:focus {
+  background: var(--card-bg);
+}
+
+html.dark .punch-card-minimal,
+html.dark .task-stack-hero,
+html.dark .notif-card-ios,
+html.dark .ios-settings-group,
+html.dark .ios-bottom-sheet {
+  background: var(--card-bg);
+  border-color: var(--gray-200);
+}
+
+html.dark .task-card-ios {
+  background: var(--card-bg);
+  background-image: none;
+  border-color: var(--gray-200);
+}
+
+html.dark .task-card-ios::before {
+  border-color: var(--card-bg) var(--card-bg) var(--gray-200) var(--gray-200);
+}
+
+html.dark .punch-badge-ios {
+  background: var(--app-bg);
+  border-color: var(--gray-200);
+}
+
+html.dark .punch-badge-ios.active {
+  background: var(--card-bg);
+  border-color: rgba(81, 112, 255, 0.4);
+}
+
+html.dark .punch-icon-ios {
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+}
+
+html.dark .ios-time-big,
+html.dark .task-title-ios,
+html.dark .ios-task-title {
+  color: var(--gray-900);
+}
+
+html.dark .task-meta-ios {
+  border-top-color: var(--gray-200);
+}
+
+html.dark .notif-card-ios:active,
+html.dark .ios-settings-row:active {
+  background-color: var(--gray-100);
+}
+
+html.dark .ios-settings-row:not(:last-child)::after {
+  background-color: var(--gray-200);
+}
+
+html.dark .status-pill-ios {
+  background: rgba(81, 112, 255, 0.15);
+  color: #8499ff;
+}
+
+html.dark .ios-switch-slider {
+  background-color: var(--gray-300);
+}
+
+html.dark .ios-switch-slider:before {
+  background-color: var(--gray-800);
+}

@@ -1,28 +1,34 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NATRA - Absensi</title>
   <link rel="stylesheet" href="../src/styles/tailwind.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="../src/core/theme/theme-init.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-50 relative pb-24">
 
-  <div class="app-screen">
-    
-    <!-- Top Header -->
-    <header class="module-header">
+<body class="bg-slate-50 relative">
+
+  <div class="app-wrap pb-32">
+
+    <!-- Top Header - Floating Style -->
+    <header class="module-header bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-[100]">
       <div class="module-header-row">
         <h1 class="module-title">Absensi</h1>
         <div id="today-status" class="flex items-center"></div>
       </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto px-5 py-6" id="main-scroll">
-      
+    <main class="px-5 py-6" id="main-content">
+
       <!-- Main Action Card -->
       <div class="card p-6 flex flex-col items-center mb-6">
         <div class="text-center mb-6">
@@ -40,45 +46,56 @@
           </div>
         </div>
 
-        <button id="attendance-btn" class="relative group w-40 h-40 rounded-full flex flex-col items-center justify-center transition-all bg-slate-100 text-slate-400 border-4 border-slate-50 shadow-inner overflow-hidden">
-          <div class="absolute inset-0 rounded-full transition-all group-active:scale-95 group-active:shadow-inner" id="attendance-circle-bg"></div>
-          
+        <button id="attendance-btn"
+          class="relative group w-40 h-40 rounded-full flex flex-col items-center justify-center transition-all bg-slate-100 text-slate-400 border-4 border-slate-50 shadow-inner overflow-hidden">
+          <div class="absolute inset-0 rounded-full transition-all group-active:scale-95 group-active:shadow-inner"
+            id="attendance-circle-bg"></div>
+
           <i data-lucide="fingerprint" class="w-12 h-12 mb-1 relative z-10" id="btn-icon"></i>
           <span id="btn-label" class="font-bold text-lg relative z-10">Memuat...</span>
-          <span id="btn-sub" class="text-[10px] uppercase font-bold tracking-wider opacity-70 relative z-10 mt-1">Tunggu Sebentar</span>
-          
+          <span id="btn-sub" class="text-[10px] uppercase font-bold tracking-wider opacity-70 relative z-10 mt-1">Tunggu
+            Sebentar</span>
+
           <!-- Curved Text specifically for Done State (Hidden by default) -->
-          <svg id="completed-curved-text" class="absolute inset-0 w-full h-full animate-[spin_20s_linear_infinite] hidden pointer-events-none" viewBox="0 0 100 100">
-             <path id="curve" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" />
-             <text class="text-[9px] font-bold tracking-[0.2em] uppercase fill-white/80" dominant-baseline="central">
-               <textPath href="#curve" startOffset="50%" text-anchor="middle">
-                 ANDA TELAH ABSEN • DATA TERCATAT • 
-               </textPath>
-             </text>
+          <svg id="completed-curved-text"
+            class="absolute inset-0 w-full h-full animate-[spin_20s_linear_infinite] hidden pointer-events-none"
+            viewBox="0 0 100 100">
+            <path id="curve" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" />
+            <text class="text-[9px] font-bold tracking-[0.2em] uppercase fill-white/80" dominant-baseline="central">
+              <textPath href="#curve" startOffset="50%" text-anchor="middle">
+                SELAMAT iNI ANDA SUDAH ABSEN •
+              </textPath>
+            </text>
           </svg>
 
           <!-- Animated ring for active state -->
-          <div class="absolute -inset-2 border-2 border-dashed border-slate-200 rounded-full animate-[spin_10s_linear_infinite] opacity-50" id="attendance-ring"></div>
+          <div
+            class="absolute -inset-2 border-2 border-dashed border-slate-200 rounded-full animate-[spin_10s_linear_infinite] opacity-50"
+            id="attendance-ring"></div>
         </button>
 
         <!-- Location Status / Map -->
         <div class="mt-8 w-full">
-           <div class="relative w-full h-36 rounded-2xl overflow-hidden border-2 border-slate-200 shadow-sm z-10">
-              <div id="map" class="w-full h-full bg-slate-100 flex items-center justify-center text-xs text-slate-400 font-medium">Memuat peta...</div>
-              
-              <!-- Update Location Button Overlay -->
-              <button id="update-loc-btn" class="absolute bottom-3 right-3 z-[999] bg-white/90 backdrop-blur text-slate-700 pr-3 pl-1.5 py-1.5 rounded-full shadow-lg border border-slate-200 hover:bg-white active:scale-95 transition-all flex items-center gap-2 group">
-                 <div class="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center border border-primary-200">
-                   <i data-lucide="crosshair" class="w-3.5 h-3.5 group-active:animate-ping"></i>
-                 </div>
-                 <span class="text-[10px] uppercase tracking-wider font-bold">Titik Baru</span>
-              </button>
-           </div>
-           
-           <div class="flex items-center justify-center gap-2 mt-3 text-[11px] font-semibold px-2">
-             <i data-lucide="map-pin" class="w-3.5 h-3.5 text-primary-500 shrink-0"></i>
-             <span id="location-status" class="text-slate-600 text-center line-clamp-1">Mendeteksi koordinat...</span>
-           </div>
+          <div class="relative w-full h-36 rounded-2xl overflow-hidden border-2 border-slate-200 shadow-sm z-10">
+            <div id="map"
+              class="w-full h-full bg-slate-100 flex items-center justify-center text-xs text-slate-400 font-medium">
+              Memuat peta...</div>
+
+            <!-- Update Location Button Overlay -->
+            <button id="update-loc-btn"
+              class="absolute bottom-3 right-3 z-[999] bg-white/90 backdrop-blur text-slate-700 pr-3 pl-1.5 py-1.5 rounded-full shadow-lg border border-slate-200 hover:bg-white active:scale-95 transition-all flex items-center gap-2 group">
+              <div
+                class="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center border border-primary-200">
+                <i data-lucide="crosshair" class="w-3.5 h-3.5 group-active:animate-ping"></i>
+              </div>
+              <span class="text-[10px] uppercase tracking-wider font-bold">Titik Baru</span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-center gap-2 mt-3 text-[11px] font-semibold px-2">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-primary-500 shrink-0"></i>
+            <span id="location-status" class="text-slate-600 text-center line-clamp-1">Mendeteksi koordinat...</span>
+          </div>
         </div>
       </div>
 
@@ -88,61 +105,99 @@
           <i data-lucide="calendar" class="w-5 h-5 text-primary-500"></i>
           <h2 class="text-lg font-bold text-slate-800">Riwayat Bulan Ini</h2>
         </div>
-        
+
         <div class="card p-5 mb-6">
-          <h3 class="text-sm font-bold text-slate-700 text-center mb-4 pb-2 border-b border-slate-100" id="monthly-period">Memuat...</h3>
+          <h3 class="text-sm font-bold text-slate-700 text-center mb-4 pb-2 border-b border-slate-100"
+            id="monthly-period">Memuat...</h3>
           <div id="history-list" class="min-h-[250px]">
-             <!-- Calendar Grid will be rendered here by JS -->
+            <!-- Calendar Grid will be rendered here by JS -->
           </div>
         </div>
       </div>
 
     </main>
 
-    <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 w-full max-w-md glass-nav z-50">
-      <div class="flex justify-around items-center px-2 py-1">
+    <!-- Bottom Navigation - Clean Floating Style -->
+    <nav class="glass-nav-floating">
+      <div class="flex justify-around items-center">
         <a href="dashboard.html" class="nav-item">
-          <i data-lucide="layout-dashboard" class="w-6 h-6 mb-1"></i>
-          <span class="text-[10px] font-semibold">Beranda</span>
+          <div class="nav-icon-wrap">
+            <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Beranda</span>
         </a>
         <a href="attendance.html" class="nav-item active">
-          <i data-lucide="fingerprint" class="w-6 h-6 mb-1"></i>
-          <span class="text-[10px] font-semibold">Absensi</span>
-        </a>
-        <a href="tasks.html" class="nav-item">
-          <i data-lucide="clipboard-list" class="w-6 h-6 mb-1"></i>
-          <span class="text-[10px] font-semibold">Tugas</span>
-        </a>
-        <a href="notifications.html" class="nav-item">
-          <div class="relative">
-            <i data-lucide="bell" class="w-6 h-6 mb-1"></i>
-            <span id="notif-nav-badge" class="hidden absolute -top-1 -right-1 bg-danger text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white shadow-sm">0</span>
+          <div class="nav-icon-wrap">
+            <i data-lucide="fingerprint" class="w-6 h-6"></i>
           </div>
-          <span class="text-[10px] font-semibold">Notif</span>
+          <span class="nav-label">Absensi</span>
         </a>
-        <a href="profile.html" class="nav-item">
-          <i data-lucide="user" class="w-6 h-6 mb-1"></i>
-          <span class="text-[10px] font-semibold">Profil</span>
+        <a href="tasks.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Tugas</span>
+        </a>
+        <a href="notifications.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <div class="relative">
+              <i data-lucide="bell" class="w-6 h-6"></i>
+              <span id="notif-nav-badge"
+                class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">0</span>
+            </div>
+          </div>
+          <span class="nav-label">Notif</span>
+        </a>
+        <a href="profile.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="user" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Profil</span>
         </a>
       </div>
-      <div class="h-5 w-full"></div>
     </nav>
   </div>
 
   <style>
     /* Styling state spesifik untuk tombol presensi */
-    .btn-checkin { background-color: #0ea5e9; color: white; border-color: #e0f2fe; box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.4); }
-    .btn-checkin #attendance-ring { border-color: #38bdf8; }
-    
-    .btn-checkout { background-color: #f59e0b; color: white; border-color: #fef3c7; box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4); }
-    .btn-checkout #attendance-ring { border-color: #fbbf24; }
-    
-    .btn-done { background-color: #10b981; color: white; border-color: #d1fae5; box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4); cursor: not-allowed; }
-    .btn-done #attendance-ring { border-color: #34d399; animation-play-state: paused; }
+    .btn-checkin {
+      background-color: #0ea5e9;
+      color: white;
+      border-color: #e0f2fe;
+      box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-checkin #attendance-ring {
+      border-color: #38bdf8;
+    }
+
+    .btn-checkout {
+      background-color: #f59e0b;
+      color: white;
+      border-color: #fef3c7;
+      box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-checkout #attendance-ring {
+      border-color: #fbbf24;
+    }
+
+    .btn-done {
+      background-color: #10b981;
+      color: white;
+      border-color: #d1fae5;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+      cursor: not-allowed;
+    }
+
+    .btn-done #attendance-ring {
+      border-color: #34d399;
+      animation-play-state: paused;
+    }
   </style>
 
   <script type="module" src="../src/features/attendance/attendance.controller.js"></script>
   <script>lucide.createIcons();</script>
 </body>
+
 </html>

@@ -65,7 +65,11 @@ export function formatTime(timeStr) {
 export function formatDate(dateStr) {
   if (!dateStr) return '-';
   const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-  const d = new Date(dateStr + 'T00:00:00');
+  // Ambil hanya bagian YYYY-MM-DD jika ada spasi/waktu
+  const cleanDate = dateStr.split(' ')[0];
+  const d = new Date(cleanDate + 'T00:00:00');
+  
+  if (isNaN(d.getTime())) return dateStr; // Fallback jika tetap gagal
   return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
@@ -93,27 +97,27 @@ export function getInitials(name = '') {
 
 export function priorityBadge(priority) {
   const map = {
-    low: { label: 'Rendah', bg: 'bg-slate-100 text-slate-700' },
-    medium: { label: 'Sedang', bg: 'bg-blue-100 text-blue-700' },
-    high: { label: 'Tinggi', bg: 'bg-amber-100 text-amber-700' },
-    urgent: { label: 'Urgent', bg: 'bg-red-100 text-red-700' },
+    low: { label: 'Rendah', cls: 'ios-priority-low' },
+    medium: { label: 'Sedang', cls: 'ios-priority-medium' },
+    high: { label: 'Tinggi', cls: 'ios-priority-high' },
+    urgent: { label: 'Urgent', cls: 'ios-priority-urgent' },
   };
   const p = map[priority] || map.low;
-  return `<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${p.bg}">${p.label}</span>`;
+  return `<span class="ios-priority-pill ${p.cls}">${p.label}</span>`;
 }
 
 export function statusBadge(status) {
   const map = {
-    pending: { label: 'Pending', bg: 'bg-slate-100 text-slate-700' },
-    accepted: { label: 'Diterima', bg: 'bg-blue-100 text-blue-700' },
-    in_progress: { label: 'Dikerjakan', bg: 'bg-amber-100 text-amber-700' },
-    completed: { label: 'Selesai', bg: 'bg-emerald-100 text-emerald-700' },
-    present: { label: 'Hadir', bg: 'bg-emerald-100 text-emerald-700' },
-    late: { label: 'Terlambat', bg: 'bg-amber-100 text-amber-700' },
-    absent: { label: 'Absen', bg: 'bg-red-100 text-red-700' },
+    pending: { label: 'Pending', bg: 'bg-slate-100 text-slate-500' },
+    accepted: { label: 'Diterima', bg: 'bg-blue-50 text-blue-600' },
+    in_progress: { label: 'Progres', bg: 'bg-amber-50 text-amber-600' },
+    completed: { label: 'Selesai', bg: 'bg-emerald-50 text-emerald-600' },
+    present: { label: 'Hadir', bg: 'bg-emerald-50 text-emerald-600' },
+    late: { label: 'Terlambat', bg: 'bg-amber-50 text-amber-600' },
+    absent: { label: 'Absen', bg: 'bg-red-50 text-red-600' },
   };
   const s = map[status] || map.pending;
-  return `<span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${s.bg}">${s.label}</span>`;
+  return `<span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest border border-black/5 ${s.bg}">${s.label}</span>`;
 }
 
 export function setText(id, text) {
@@ -141,10 +145,14 @@ export function showkeleton(containerId, count = 3) {
 export const showSkeleton = showkeleton;
 
 export function emptyState(message = 'Tidak ada data', icon = 'layout-list') {
+  const iconHtml = icon.includes('<svg') 
+    ? icon 
+    : `<i data-lucide="${icon}" class="w-8 h-8 text-slate-300"></i>`;
+    
   return `
     <div class="flex flex-col items-center justify-center p-8 text-center text-slate-400">
       <div class="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-4">
-        <i data-lucide="${icon}" class="w-8 h-8 text-slate-300"></i>
+        ${iconHtml}
       </div>
       <p class="text-sm font-medium">${message}</p>
     </div>

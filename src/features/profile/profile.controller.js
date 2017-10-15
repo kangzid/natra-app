@@ -5,7 +5,8 @@
 import { ProfileService } from './profile.service.js';
 import { AuthService } from '../auth/auth.service.js';
 import { Auth } from '../../core/auth/auth.js';
-import { showToast, setLoading, setText, getInitials } from '../../utils/ui-helpers.js';
+import { showToast, showConfirm, setLoading, setText, getInitials } from '../../utils/ui-helpers.js';
+import { ThemeManager } from '../../core/theme/theme-manager.js';
 
 const ProfileController = {
   async init() {
@@ -99,20 +100,16 @@ const ProfileController = {
       });
     }
 
-    // --- Dark Mode Toggle (Simulated) ---
+
+    // --- Dark Mode Toggle ---
     const darkToggle = document.getElementById('dark-mode-toggle');
     if (darkToggle) {
+      // Set initial state
+      darkToggle.checked = ThemeManager.isDark();
+      
       darkToggle.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          showToast('Mode Gelap diaktifkan (Simulasi)', 'info');
-          // Fake transition effect
-          document.body.style.filter = 'invert(0.9) hue-rotate(180deg)';
-          document.body.style.background = '#000';
-        } else {
-          showToast('Mode Terang diaktifkan', 'info');
-          document.body.style.filter = '';
-          document.body.style.background = '';
-        }
+        const isDark = ThemeManager.toggle();
+        showToast(isDark ? 'Mode Gelap diaktifkan' : 'Mode Terang diaktifkan', 'info');
       });
     }
 
@@ -191,6 +188,14 @@ const ProfileController = {
   },
 
   async _handleLogout() {
+    const confirmed = await showConfirm(
+      'Keluar dari NATRA?', 
+      'Sesi Anda akan dihentikan dan Anda harus masuk kembali untuk mengakses data.',
+      { okText: 'Keluar', cancelText: 'Batal', isDestructive: true }
+    );
+
+    if (!confirmed) return;
+
     const btn = document.getElementById('logout-btn');
     setLoading(btn, true, 'Keluar...');
     try {

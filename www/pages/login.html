@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NATRA - Login</title>
   <link rel="stylesheet" href="../src/styles/tailwind.css">
+  <script src="../src/core/theme/theme-init.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
+
+<body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-300 flex items-center justify-center min-h-screen p-4">
   <div class="w-full max-w-sm fade-in">
     <!-- Header with Logo -->
     <div class="text-center mb-10">
@@ -15,11 +19,11 @@
     </div>
 
     <!-- Form Card -->
-    <div class="bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+    <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-slate-700 transition-colors">
       <form id="login-form" class="space-y-5">
-        
+
         <div class="space-y-2">
-          <label class="block text-sm font-semibold text-slate-700">Email Address</label>
+          <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Email Address</label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <i data-lucide="mail" class="h-5 w-5 text-slate-400"></i>
@@ -29,13 +33,15 @@
         </div>
 
         <div class="space-y-2">
-          <label class="block text-sm font-semibold text-slate-700">Password</label>
+          <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <i data-lucide="lock" class="h-5 w-5 text-slate-400"></i>
             </div>
-            <input type="password" id="password" class="form-input pl-11 pr-11" placeholder="Masukkan password" required>
-            <button type="button" id="toggle-pwd" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 outline-none">
+            <input type="password" id="password" class="form-input pl-11 pr-11" placeholder="Masukkan password"
+              required>
+            <button type="button" id="toggle-pwd"
+              class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 outline-none">
               <i data-lucide="eye" id="eye-icon" class="h-5 w-5"></i>
             </button>
           </div>
@@ -49,13 +55,14 @@
         </div>
       </form>
     </div>
-    
+
     <div class="mt-8 text-center">
-      <p class="text-sm text-slate-400 font-medium">Internal System &copy; 2026 NATRA</p>
+      <p class="text-sm text-slate-400 dark:text-slate-500 font-medium">Internal System &copy; 2026 NATRA</p>
     </div>
   </div>
 
   <script type="module" src="../src/features/auth/auth.controller.js"></script>
   <script>lucide.createIcons();</script>
 </body>
+
 </html>

@@ -7,7 +7,7 @@
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-800 antialiased;
+    @apply bg-slate-50 text-slate-800 antialiased dark:bg-[#0f172a] dark:text-slate-200 transition-colors duration-300;
     font-family: 'Plus Jakarta Sans', sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
@@ -16,20 +16,20 @@
 @layer components {
   /* Mobile App Shell Layout Utilities */
   .app-screen {
-    @apply flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-slate-50 shadow-2xl relative overflow-hidden;
+    @apply flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-slate-50 dark:bg-[#0f172a] shadow-2xl relative overflow-hidden transition-colors duration-300;
   }
 
   /* Glassmorphism Navigation */
   .glass-nav {
-    @apply bg-white/75 backdrop-blur-lg border-t border-slate-200/50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)];
+    @apply bg-white/75 dark:bg-[#1e293b]/80 backdrop-blur-lg border-t border-slate-200/50 dark:border-slate-700/50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] transition-colors duration-300;
   }
 
   .nav-item {
-    @apply flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 relative text-slate-400;
+    @apply flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 relative text-slate-400 dark:text-slate-500;
   }
 
   .nav-item.active {
-    @apply text-primary-600;
+    @apply text-primary-600 dark:text-primary-400;
   }
 
   .nav-item.active::after {
@@ -38,12 +38,12 @@
 
   /* Universal Cards - Updated to Shadowless */
   .card {
-    @apply bg-white border border-slate-100 rounded-2xl p-4 shadow-none;
+    @apply bg-white dark:bg-[#1e293b] border border-slate-100 dark:border-slate-700 rounded-2xl p-4 shadow-none transition-colors duration-300;
   }
 
   /* Base Buttons */
   .btn {
-    @apply flex items-center justify-center px-4 py-3 rounded-xl font-semibold transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100;
+    @apply flex items-center justify-center px-4 py-3 rounded-xl font-semibold transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100 duration-300;
   }
 
   .btn-primary {
@@ -51,16 +51,16 @@
   }
   
   .btn-secondary {
-    @apply bg-slate-100 text-slate-700 hover:bg-slate-200 active:bg-slate-300;
+    @apply bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 active:bg-slate-300 dark:active:bg-slate-500;
   }
 
   .btn-danger {
-    @apply bg-danger text-white shadow-lg shadow-danger/30 hover:bg-red-600;
+    @apply bg-danger text-white shadow-lg shadow-danger/30 hover:bg-red-600 dark:shadow-none;
   }
 
   /* Form Elements */
   .form-input {
-    @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all;
+    @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 dark:bg-[#0f172a] dark:border-slate-700 dark:text-slate-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all duration-300;
   }
 
   /* Loading Spinner */

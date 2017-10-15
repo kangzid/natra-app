@@ -63,47 +63,44 @@ const NotificationController = {
 
   _notifCardHTML(notif) {
     const isUnread = !notif.is_read;
-    const bgCls = isUnread ? 'bg-primary-50 px-4 py-4 rounded-xl border border-primary-100 shadow-sm' : 'bg-white px-4 py-4 rounded-xl border border-slate-100 opacity-75';
+    const cardCls = isUnread ? 'notif-card-ios unread' : 'notif-card-ios';
     
-    // Attempt to guess icon depending on title
+    // Icon mapping logic optimized
     const titleLower = notif.title.toLowerCase();
     let iconName = 'bell';
     let iconColor = 'text-primary-500';
-    let iconBg = 'bg-primary-100';
+    let iconBg = 'bg-primary-50';
 
     if (titleLower.includes('absen')) {
       iconName = 'fingerprint';
       iconColor = 'text-emerald-500';
-      iconBg = 'bg-emerald-100';
+      iconBg = 'bg-emerald-50';
     } else if (titleLower.includes('tugas')) {
       iconName = 'clipboard-list';
       iconColor = 'text-amber-500';
-      iconBg = 'bg-amber-100';
-    } else if (titleLower.includes('sistem')) {
-      iconName = 'server';
-      iconColor = 'text-slate-500';
-      iconBg = 'bg-slate-100';
+      iconBg = 'bg-amber-50';
     }
 
     return `
-      <div class="${bgCls} transition-all active:scale-[0.98] cursor-pointer relative" 
+      <div class="${cardCls} cursor-pointer" 
            data-notif-id="${notif.id}" 
            data-is-read="${notif.is_read}">
         
-        ${isUnread ? '<div class="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary-500 shadow-[0_0_8px_rgba(14,165,233,0.8)]"></div>' : ''}
-        
-        <div class="flex gap-3">
-          <div class="w-10 h-10 shrink-0 rounded-full flex items-center justify-center ${iconBg} ${iconColor}">
+        <div class="flex flex-col items-center gap-1">
+          <div class="notif-icon-ios ${iconBg} ${iconColor}">
             <i data-lucide="${iconName}" class="w-5 h-5"></i>
           </div>
-          <div class="flex-1 pr-4">
-            <h3 class="text-sm font-bold text-slate-800 mb-1 leading-tight">${notif.title}</h3>
-            <p class="text-xs text-slate-600 mb-2 leading-relaxed">${notif.message}</p>
-            <div class="flex items-center gap-1.5 text-[10px] font-semibold text-slate-400">
-              <i data-lucide="clock" class="w-3 h-3"></i>
+          ${isUnread ? '<div class="notif-dot-ios"></div>' : '<div class="w-2 h-2"></div>'}
+        </div>
+
+        <div class="flex-1 min-w-0 pr-2">
+          <div class="flex justify-between items-start mb-0.5">
+            <h3 class="text-[15px] font-extrabold text-slate-900 truncate leading-tight">${notif.title}</h3>
+            <span class="text-[10px] font-bold text-slate-400 whitespace-nowrap ml-2">
               ${timeAgo(notif.created_at)}
-            </div>
+            </span>
           </div>
+          <p class="text-[13px] text-slate-500 leading-snug font-medium line-clamp-2">${notif.message}</p>
         </div>
       </div>
     `;

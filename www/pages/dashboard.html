@@ -1,137 +1,191 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NATRA - Dashboard</title>
   <link rel="stylesheet" href="../src/styles/tailwind.css">
+  <script src="../src/core/theme/theme-init.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-slate-50 relative pb-24">
-  
-  <div class="app-screen">
-    
-    <!-- Top Header -->
-    <header class="bg-primary-600 px-5 pt-8 pb-10 text-white rounded-b-[2rem] shadow-lg relative z-10">
+
+<body class="bg-slate-50 relative">
+
+  <div class="app-wrap pb-32">
+    <!-- Konten Beranda di-scroll secara keseluruhan -->
+
+    <!-- Top Header - Now part of scroll flow -->
+    <header class="bg-primary-600 px-5 pt-8 pb-12 text-white rounded-b-[2.5rem] shadow-lg relative">
       <div class="flex justify-between items-center mb-6">
         <div>
-          <p class="text-primary-200 text-sm font-medium mb-1" id="greeting-text">Selamat Pagi</p>
-          <h2 class="text-2xl font-bold tracking-tight" id="user-name">Memuat...</h2>
+          <p class="text-blue-100/70 text-sm font-medium mb-1" id="greeting-text">Selamat Pagi</p>
+          <h2 class="text-2xl font-extrabold tracking-tight" id="user-name">Memuat...</h2>
         </div>
-        <div class="w-14 h-14 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-xl font-bold shadow-sm border border-white/10" id="user-avatar">
+        <div
+          class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-xl font-bold shadow-sm border border-white/10"
+          id="user-avatar">
           --
         </div>
       </div>
-      
-      <div class="flex justify-between items-center bg-black/10 rounded-xl p-3 backdrop-blur-sm border border-white/10">
+
+      <div
+        class="flex justify-between items-center bg-black/10 rounded-2xl p-4 backdrop-blur-sm border border-white/10">
         <div class="flex items-center gap-3">
-          <i data-lucide="badge-check" class="w-5 h-5 text-emerald-300"></i>
-          <span class="font-medium text-sm">ID Pegawai</span>
+          <i data-lucide="badge-check" class="w-5 h-5 text-blue-200"></i>
+          <span class="font-medium text-sm text-blue-50">ID Pegawai</span>
         </div>
-        <span class="font-bold tracking-widest text-primary-100" id="employee-id-text">------</span>
+        <span class="font-bold tracking-widest text-white" id="employee-id-text">------</span>
       </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto px-5 -mt-4 relative z-20 pb-24" id="main-scroll">
-      
+    <main class="px-5 -mt-6 relative z-20" id="main-content">
+
       <!-- Refresh Area -->
       <div class="flex justify-end mb-2">
-        <button id="refresh-btn" class="p-2 bg-white rounded-full shadow-sm text-slate-400 hover:text-primary-500 transition-colors">
+        <button id="refresh-btn"
+          class="p-2 bg-white rounded-full shadow-sm text-slate-400 hover:text-primary-500 transition-colors">
           <i data-lucide="refresh-cw" class="w-4 h-4"></i>
         </button>
       </div>
 
+      <!-- Refined Skeleton Screens -->
       <div id="dashboard-loading" class="space-y-4">
-        <!-- Skeleton -->
-        <div class="bg-white rounded-2xl p-4 animate-pulse h-32 border border-slate-100"></div>
-        <div class="bg-white rounded-2xl p-4 animate-pulse h-32 border border-slate-100"></div>
+        <!-- Attendance Skeleton -->
+        <div class="card p-5">
+          <div class="flex justify-between items-center mb-4">
+            <div class="skeleton h-5 w-32"></div>
+            <div class="skeleton h-6 w-16 rounded-full"></div>
+          </div>
+        </div>
+        <!-- Attendance Skeleton (iOS Style) -->
+        <div class="skeleton h-56 w-full rounded-[2rem] mb-4"></div>
+
+        <!-- Tasks Skeleton (iOS Style) -->
+        <div class="skeleton h-48 w-full rounded-[2.25rem] mb-4"></div>
+
+        <!-- Small Modules Skeleton -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="skeleton h-28 rounded-2xl"></div>
+          <div class="skeleton h-28 rounded-2xl"></div>
+        </div>
       </div>
 
       <div id="dashboard-content" class="hidden space-y-4 fade-in">
-        
-        <!-- Attendance Today Card -->
-        <div class="card p-5">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-slate-800 flex items-center gap-2">
-              <i data-lucide="clock" class="w-5 h-5 text-primary-500"></i>
+
+        <!-- Attendance Today - iOS Digital Punch Card -->
+        <div class="punch-card-minimal">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="font-extrabold text-slate-800 text-sm tracking-tight flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-primary-500"></i>
               Absensi Hari Ini
             </h3>
-            <span id="att-status" class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">--</span>
+            <span id="att-status"
+              class="px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest rounded-full bg-slate-50 text-slate-400 border border-slate-100">--</span>
           </div>
+
           <div class="flex gap-4">
-            <div class="flex-1 bg-slate-50 rounded-xl p-4 border border-slate-100 relative overflow-hidden group">
-              <div class="absolute -right-2 -bottom-2 opacity-5"><i data-lucide="log-in" class="w-16 h-16"></i></div>
-              <p class="text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">Check In</p>
-              <p class="text-2xl font-bold text-slate-800" id="att-checkin">--:--</p>
+            <!-- Check In -->
+            <div id="badge-checkin" class="punch-badge-ios">
+              <div class="punch-icon-ios">
+                <i data-lucide="fingerprint" class="w-6 h-6"></i>
+              </div>
+              <p class="ios-time-big" id="att-checkin">--:--</p>
+              <p class="ios-label-small">Check In</p>
             </div>
-            <div class="flex-1 bg-slate-50 rounded-xl p-4 border border-slate-100 relative overflow-hidden group">
-              <div class="absolute -right-2 -bottom-2 opacity-5"><i data-lucide="log-out" class="w-16 h-16"></i></div>
-              <p class="text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">Check Out</p>
-              <p class="text-2xl font-bold text-slate-800" id="att-checkout">--:--</p>
+
+            <!-- Check Out -->
+            <div id="badge-checkout" class="punch-badge-ios">
+              <div class="punch-icon-ios">
+                <i data-lucide="log-out" class="w-6 h-6"></i>
+              </div>
+              <p class="ios-time-big" id="att-checkout">--:--</p>
+              <p class="ios-label-small">Check Out</p>
             </div>
           </div>
         </div>
 
-        <!-- Task Summary -->
-        <div class="card p-5">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-slate-800 flex items-center gap-2">
-              <i data-lucide="layout-list" class="w-5 h-5 text-amber-500"></i>
-              Tugas Aktif
-            </h3>
-            <a href="tasks.html" class="text-xs font-semibold text-primary-600 flex items-center">Lihat <i data-lucide="chevron-right" class="w-3 h-3 ml-0.5"></i></a>
+        <!-- Active Tasks - iOS Stack Style -->
+        <div class="task-stack-hero">
+          <div class="flex justify-between items-start">
+            <div class="flex-1 pr-4">
+              <div class="status-pill-ios">
+                <i data-lucide="zap" class="w-3 h-3 fill-current"></i>
+                <span id="focus-task-priority">Aktif</span>
+              </div>
+              <h3 class="task-title-ios" id="focus-task-title">Memuat tugas fokus...</h3>
+            </div>
+            <a href="tasks.html"
+              class="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-primary-600 active:scale-95 transition-transform">
+              <i data-lucide="chevron-right" class="w-6 h-6"></i>
+            </a>
           </div>
-          <div class="grid grid-cols-3 gap-3">
-            <div class="text-center p-3 rounded-xl bg-slate-50 border border-slate-100">
-              <p class="text-xs text-slate-500 font-medium mb-1">Pending</p>
-              <p class="text-xl font-bold text-slate-700" id="tasks-pending">0</p>
+
+          <div class="task-meta-ios">
+            <div class="flex gap-6">
+              <div>
+                <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Proses</p>
+                <p class="text-base font-extrabold text-slate-800" id="tasks-inprogress">0</p>
+              </div>
+              <div>
+                <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Pending</p>
+                <p class="text-base font-extrabold text-slate-800" id="tasks-pending">0</p>
+              </div>
             </div>
-            <div class="text-center p-3 rounded-xl bg-amber-50 border border-amber-100">
-              <p class="text-xs text-amber-600 font-medium mb-1">Proses</p>
-              <p class="text-xl font-bold text-amber-700" id="tasks-inprogress">0</p>
-            </div>
-            <div class="text-center p-3 rounded-xl bg-emerald-50 border border-emerald-100">
-              <p class="text-xs text-emerald-600 font-medium mb-1">Selesai</p>
-              <p class="text-xl font-bold text-emerald-700" id="tasks-completed">0</p>
+            <div
+              class="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-2xl flex items-center gap-2 border border-emerald-100/50">
+              <i data-lucide="check" class="w-4 h-4 stroke-[3px]"></i>
+              <span class="text-sm font-extrabold" id="tasks-completed">0</span>
             </div>
           </div>
         </div>
 
         <!-- GPS Toggle -->
         <div class="card p-4 flex justify-between items-center">
-           <div class="flex items-center gap-3">
-             <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-               <i data-lucide="navigation" class="w-5 h-5 text-blue-500"></i>
-             </div>
-             <div>
-               <p class="font-bold text-slate-800 text-sm">GPS Tracking</p>
-               <p class="text-xs text-slate-500" id="gps-status-text">Berhenti</p>
-             </div>
-           </div>
-           <label class="relative inline-flex items-center cursor-pointer">
-             <input type="checkbox" id="gps-toggle" class="sr-only peer">
-             <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
-           </label>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
+              <i data-lucide="navigation" class="w-5 h-5 text-blue-500"></i>
+            </div>
+            <div>
+              <p class="font-bold text-slate-800 text-sm">GPS Tracking</p>
+              <p class="text-xs text-slate-500" id="gps-status-text">Berhenti</p>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="gps-toggle" class="sr-only peer">
+            <div
+              class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500">
+            </div>
+          </label>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-          <!-- Monthly Attendance -->
-          <div class="card p-4">
-            <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+          <!-- Monthly Attendance Chart Widget -->
+          <div class="card p-4 flex flex-col items-center">
+            <h3 class="font-bold text-slate-800 text-sm mb-4 self-start flex items-center gap-2">
               <i data-lucide="calendar-days" class="w-4 h-4 text-emerald-500"></i> B. Ini
             </h3>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center text-xs">
-                <span class="text-slate-500 flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Hadir</span>
-                <span class="font-bold text-slate-700" id="monthly-present">0</span>
+            <div class="relative w-28 h-28 flex items-center justify-center">
+              <canvas id="attendanceDonutChart"></canvas>
+              <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span class="text-lg font-extrabold text-slate-800" id="presence-percentage">0%</span>
+                <span class="text-[8px] text-slate-400 font-bold uppercase">Hadir</span>
               </div>
-              <div class="flex justify-between items-center text-xs">
-                <span class="text-slate-500 flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>Telat</span>
-                <span class="font-bold text-slate-700" id="monthly-late">0</span>
+            </div>
+            <div class="mt-4 w-full grid grid-cols-3 gap-1">
+              <div class="text-center">
+                <p class="text-[9px] text-slate-400 font-bold uppercase mb-0.5">H</p>
+                <p class="text-xs font-bold text-emerald-600" id="monthly-present">0</p>
               </div>
-              <div class="flex justify-between items-center text-xs">
-                <span class="text-slate-500 flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-red-500"></div>Absen</span>
-                <span class="font-bold text-slate-700" id="monthly-absent">0</span>
+              <div class="text-center">
+                <p class="text-[9px] text-slate-400 font-bold uppercase mb-0.5">T</p>
+                <p class="text-xs font-bold text-amber-600" id="monthly-late">0</p>
+              </div>
+              <div class="text-center">
+                <p class="text-[9px] text-slate-400 font-bold uppercase mb-0.5">A</p>
+                <p class="text-xs font-bold text-red-600" id="monthly-absent">0</p>
               </div>
             </div>
           </div>
@@ -145,46 +199,58 @@
               <span class="text-3xl font-extrabold text-primary-600" id="notif-count">0</span>
               <span class="text-[10px] text-slate-400 font-medium uppercase mt-1">Belum Dibaca</span>
             </div>
-            <a href="notifications.html" class="mt-2 text-xs font-semibold text-center text-primary-600 p-2 bg-primary-50 rounded-lg">Buka <i data-lucide="arrow-right" class="w-3 h-3 inline"></i></a>
+            <a href="notifications.html"
+              class="mt-2 text-xs font-semibold text-center text-primary-600 p-2 bg-primary-50 rounded-lg">Buka <i
+                data-lucide="arrow-right" class="w-3 h-3 inline"></i></a>
           </div>
         </div>
 
       </div>
     </main>
 
-    <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 w-full max-w-md glass-nav z-50">
-      <div class="flex justify-around items-center px-2 py-1">
+    <!-- Bottom Navigation - Floating Style -->
+    <nav class="glass-nav-floating">
+      <div class="flex justify-around items-center">
         <a href="dashboard.html" class="nav-item active">
-          <i data-lucide="layout-dashboard" class="w-6 h-6 mb-1"></i>
-          <span class="text-[10px] font-semibold">Beranda</span>
-        </a>
-        <a href="attendance.html" class="nav-item">
-          <i data-lucide="fingerprint" class="w-6 h-6 mb-1"></i>
-          <span class="text-[10px] font-semibold">Absensi</span>
-        </a>
-        <a href="tasks.html" class="nav-item">
-          <i data-lucide="clipboard-list" class="w-6 h-6 mb-1"></i>
-          <span class="text-[10px] font-semibold">Tugas</span>
-        </a>
-        <a href="notifications.html" class="nav-item">
-          <div class="relative">
-            <i data-lucide="bell" class="w-6 h-6 mb-1"></i>
-            <span id="notif-nav-badge" class="hidden absolute -top-1 -right-1 bg-danger text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white shadow-sm">0</span>
+          <div class="nav-icon-wrap">
+            <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
           </div>
-          <span class="text-[10px] font-semibold">Notif</span>
+          <span class="nav-label">Beranda</span>
         </a>
-        <a href="profile.html" class="nav-item">
-          <i data-lucide="user" class="w-6 h-6 mb-1"></i>
-          <span class="text-[10px] font-semibold">Profil</span>
+        <a href="attendance.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="fingerprint" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Absensi</span>
+        </a>
+        <a href="tasks.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Tugas</span>
+        </a>
+        <a href="notifications.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <div class="relative">
+              <i data-lucide="bell" class="w-6 h-6"></i>
+              <span id="notif-nav-badge"
+                class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">0</span>
+            </div>
+          </div>
+          <span class="nav-label">Notif</span>
+        </a>
+        <a href="profile.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="user" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Profil</span>
         </a>
       </div>
-      <!-- iOS style home indicator area -->
-      <div class="h-5 w-full"></div>
     </nav>
   </div>
 
   <script type="module" src="../src/features/dashboard/dashboard.controller.js"></script>
   <script>lucide.createIcons();</script>
 </body>
+
 </html>

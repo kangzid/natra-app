@@ -103,6 +103,44 @@
   --max-w:      480px;
 }
 
+/* ── Dark Mode (Slate inspired) ───────────────────────── */
+html.dark, .dark {
+  /* Slate-based backgrounds */
+  --app-bg:       #0f172a; 
+  --card-bg:      #1e293b; 
+  --nav-bg:       rgba(30, 41, 59, 0.85); 
+  --header-bg:    #1e293b;
+
+  /* Inverted Grays (Slate) */
+  --gray-50:  #020617;
+  --gray-100: #0f172a;
+  --gray-200: #1e293b;
+  --gray-300: #334155;
+  --gray-400: #475569;
+  --gray-500: #64748b;
+  --gray-600: #94a3b8;
+  --gray-700: #cbd5e1;
+  --gray-800: #e2e8f0;
+  --gray-900: #f8fafc;
+
+  /* Adjust semantic colors for dark mode contrast */
+  --success-bg:   rgba(16, 185, 129, 0.15);
+  --success-text: #34d399;
+  
+  --warning-bg:   rgba(245, 158, 11, 0.15);
+  --warning-text: #fbbf24;
+  
+  --danger-bg:    rgba(239, 68, 68, 0.15);
+  --danger-text:  #f87171;
+  
+  --info-bg:      rgba(14, 165, 233, 0.15);
+  --info-text:    #38bdf8;
+
+  --blue-50:      rgba(81, 112, 255, 0.1);
+  --blue-100:     rgba(81, 112, 255, 0.2);
+}
+
+
 /* ── Reset ────────────────────────────────────────── */
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -136,6 +174,14 @@ body::before {
     radial-gradient(at 100% 100%, rgba(81, 112, 255, 0.08) 0px, transparent 50%),
     radial-gradient(at 0% 100%, rgba(132, 153, 255, 0.05) 0px, transparent 50%);
   filter: blur(80px);
+}
+
+html.dark body::before {
+  background: 
+    radial-gradient(at 0% 0%, rgba(81, 112, 255, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(132, 153, 255, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(81, 112, 255, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(132, 153, 255, 0.1) 0px, transparent 50%);
 }
 
 img, svg { display: block; }
@@ -174,7 +220,7 @@ input, textarea, select { font-family: inherit; }
   width: 100%;
   max-width: var(--max-w);
   height: var(--header-h);
-  background: #ffffff;
+  background: var(--card-bg);
   z-index: 200;
   display: flex;
   align-items: center;
@@ -185,7 +231,7 @@ input, textarea, select { font-family: inherit; }
 
 /* Standard Page Header used across modules */
 .module-header {
-  background: #ffffff;
+  background: var(--card-bg);
   border-bottom: 1px solid var(--gray-100);
   padding: var(--sp-6) var(--sp-5) var(--sp-4);
   position: sticky;
