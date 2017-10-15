@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NATRA - Pegawai Profil</title>
+  <link rel="stylesheet" href="../src/styles/tailwind.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 relative pb-24">
+
+  <div class="app-screen">
+    
+    <!-- Top Header Profile -->
+    <header class="bg-primary-600 px-5 pt-8 pb-12 text-white rounded-b-[2rem] shadow-lg relative z-10 flex flex-col items-center">
+      <div id="profile-avatar" class="w-24 h-24 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-4xl font-extrabold shadow-inner border-[3px] border-white/30 mb-4">
+        --
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight mb-1" id="profile-name">Memuat...</h1>
+      <p class="text-primary-200 text-sm font-medium bg-black/20 px-4 py-1 rounded-full border border-white/10" id="profile-id">ID: ------</p>
+    </header>
+
+    <main class="flex-1 overflow-y-auto px-5 -mt-6 relative z-20" id="main-scroll">
+      
+      <!-- Info Card -->
+      <div class="card p-5 mb-5 space-y-4">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 flex items-center gap-2">
+          <i data-lucide="user-square-2" class="w-4 h-4"></i> Informasi Akun
+        </h3>
+        
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400"><i data-lucide="mail" class="w-5 h-5"></i></div>
+          <div>
+            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Email</p>
+            <p class="text-sm font-bold text-slate-700" id="profile-email">Memuat...</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400"><i data-lucide="briefcase" class="w-5 h-5"></i></div>
+          <div>
+            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Departemen</p>
+            <p class="text-sm font-bold text-slate-700" id="profile-department">Memuat...</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400"><i data-lucide="award" class="w-5 h-5"></i></div>
+          <div>
+            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Posisi</p>
+            <p class="text-sm font-bold text-slate-700" id="profile-position">Memuat...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Card -->
+      <div class="card p-5 mb-5">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2 mb-4 flex items-center gap-2">
+          <i data-lucide="lock" class="w-4 h-4"></i> Ubah Password
+        </h3>
+        
+        <form id="password-form" class="space-y-4">
+          <div class="space-y-1.5">
+            <label class="block text-xs font-bold text-slate-600">Password Saat Ini</label>
+            <div class="relative">
+              <input type="password" id="current-password" class="form-input text-sm py-2.5" placeholder="Masukkan password saat ini" required>
+            </div>
+          </div>
+          
+          <div class="space-y-1.5">
+            <label class="block text-xs font-bold text-slate-600">Password Baru</label>
+            <div class="relative">
+              <input type="password" id="new-password" class="form-input text-sm py-2.5" placeholder="Minimal 8 karakter" required minlength="8">
+            </div>
+          </div>
+          
+          <div class="space-y-1.5">
+            <label class="block text-xs font-bold text-slate-600">Konfirmasi Password</label>
+            <div class="relative">
+              <input type="password" id="new-password-confirmation" class="form-input text-sm py-2.5" placeholder="Ulangi password baru" required minlength="8">
+            </div>
+          </div>
+          
+          <div class="pt-2">
+            <button type="submit" id="btn-save-pwd" class="btn btn-secondary w-full text-sm">
+              <i data-lucide="save" class="w-4 h-4 mr-2"></i> Simpan Password Baru
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Logout Button -->
+      <button id="logout-btn" class="btn btn-danger w-full text-base mb-4 bg-red-50 text-red-600 shadow-none border border-red-100 hover:bg-red-100 active:bg-red-200">
+        <i data-lucide="log-out" class="w-5 h-5 mr-2"></i> Keluar Dulu
+      </button>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 w-full max-w-md glass-nav z-50">
+      <div class="flex justify-around items-center px-2 py-1">
+        <a href="dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard" class="w-6 h-6 mb-1"></i>
+          <span class="text-[10px] font-semibold">Beranda</span>
+        </a>
+        <a href="attendance.html" class="nav-item">
+          <i data-lucide="fingerprint" class="w-6 h-6 mb-1"></i>
+          <span class="text-[10px] font-semibold">Absensi</span>
+        </a>
+        <a href="tasks.html" class="nav-item">
+          <i data-lucide="clipboard-list" class="w-6 h-6 mb-1"></i>
+          <span class="text-[10px] font-semibold">Tugas</span>
+        </a>
+        <a href="notifications.html" class="nav-item">
+          <div class="relative">
+            <i data-lucide="bell" class="w-6 h-6 mb-1"></i>
+            <span id="notif-nav-badge" class="hidden absolute -top-1 -right-1 bg-danger text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white shadow-sm">0</span>
+          </div>
+          <span class="text-[10px] font-semibold">Notif</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+          <i data-lucide="user" class="w-6 h-6 mb-1"></i>
+          <span class="text-[10px] font-semibold">Profil</span>
+        </a>
+      </div>
+      <div class="h-5 w-full"></div>
+    </nav>
+  </div>
+
+  <script type="module" src="../src/features/profile/profile.controller.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

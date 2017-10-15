@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NATRA - Tugas Aktif</title>
+  <link rel="stylesheet" href="../src/styles/tailwind.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 relative pb-24">
+
+  <div class="app-screen">
+    
+    <!-- Top Header -->
+    <header class="module-header shadow-sm">
+      <div class="module-header-row">
+        <h1 class="module-title">Tugas Saya</h1>
+        <div class="bg-primary-50 text-primary-600 px-3 py-1.5 rounded-lg text-xs font-bold" id="tasks-count">
+          --
+        </div>
+      </div>
+
+      <!-- Filter Tabs: Status -->
+      <div class="flex gap-2 mb-3 overflow-x-auto pb-1 hide-scrollbar">
+        <button class="px-4 py-1.5 rounded-full text-sm font-medium border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 transition-colors whitespace-nowrap" data-filter-status="">Semua Tugas</button>
+        <button class="px-4 py-1.5 rounded-full text-sm font-medium border border-transparent text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors whitespace-nowrap" data-filter-status="pending">Pending</button>
+        <button class="px-4 py-1.5 rounded-full text-sm font-medium border border-transparent text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors whitespace-nowrap" data-filter-status="accepted">Diterima</button>
+        <button class="px-4 py-1.5 rounded-full text-sm font-medium border border-transparent text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors whitespace-nowrap" data-filter-status="in_progress">Dikerjakan</button>
+        <button class="px-4 py-1.5 rounded-full text-sm font-medium border border-transparent text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors whitespace-nowrap" data-filter-status="completed">Selesai</button>
+      </div>
+
+      <!-- Filter Tabs: Priority -->
+      <div class="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
+        <span class="text-xs font-semibold text-slate-400 py-1.5 flex items-center shrink-0">Prioritas:</span>
+        <button class="px-3 py-1 rounded-md text-xs font-medium border border-transparent text-slate-600 bg-slate-50 hover:bg-slate-100 transition-colors whitespace-nowrap" data-filter-priority="">Semua</button>
+        <button class="px-3 py-1 rounded-md text-xs font-medium border border-transparent text-red-600 bg-red-50 hover:bg-red-100 transition-colors whitespace-nowrap" data-filter-priority="urgent">Urgent</button>
+        <button class="px-3 py-1 rounded-md text-xs font-medium border border-transparent text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors whitespace-nowrap" data-filter-priority="high">High</button>
+        <button class="px-3 py-1 rounded-md text-xs font-medium border border-transparent text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors whitespace-nowrap" data-filter-priority="medium">Medium</button>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto px-4 py-6 bg-slate-50 relative z-10" id="tasks-list">
+      <!-- Tasks injected here -->
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 w-full max-w-md glass-nav z-50">
+      <div class="flex justify-around items-center px-2 py-1">
+        <a href="dashboard.html" class="nav-item">
+          <i data-lucide="layout-dashboard" class="w-6 h-6 mb-1"></i>
+          <span class="text-[10px] font-semibold">Beranda</span>
+        </a>
+        <a href="attendance.html" class="nav-item">
+          <i data-lucide="fingerprint" class="w-6 h-6 mb-1"></i>
+          <span class="text-[10px] font-semibold">Absensi</span>
+        </a>
+        <a href="tasks.html" class="nav-item active">
+          <i data-lucide="clipboard-list" class="w-6 h-6 mb-1"></i>
+          <span class="text-[10px] font-semibold">Tugas</span>
+        </a>
+        <a href="notifications.html" class="nav-item">
+          <div class="relative">
+            <i data-lucide="bell" class="w-6 h-6 mb-1"></i>
+            <span id="notif-nav-badge" class="hidden absolute -top-1 -right-1 bg-danger text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white shadow-sm">0</span>
+          </div>
+          <span class="text-[10px] font-semibold">Notif</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <i data-lucide="user" class="w-6 h-6 mb-1"></i>
+          <span class="text-[10px] font-semibold">Profil</span>
+        </a>
+      </div>
+      <div class="h-5 w-full"></div>
+    </nav>
+  </div>
+
+  <style>
+    /* Custom active styles for filter pills */
+    button[data-filter-status].filter-active {
+      background-color: var(--color-primary-600, #0284c7) !important;
+      color: white !important;
+      border-color: transparent !important;
+      box-shadow: 0 4px 10px -2px rgba(2, 132, 199, 0.3) !important;
+    }
+    button[data-filter-priority].filter-active {
+      border: 1px solid currentColor !important;
+      background-color: transparent !important;
+    }
+    button[data-filter-priority="urgent"].filter-active { background-color: #fef2f2 !important; }
+    button[data-filter-priority="high"].filter-active { background-color: #fffbeb !important; }
+    button[data-filter-priority="medium"].filter-active { background-color: #eff6ff !important; }
+    button[data-filter-priority=""].filter-active { background-color: #f8fafc !important; color: #0284c7 !important; border-color: #0284c7 !important;}
+  </style>
+
+  <script type="module" src="../src/features/tasks/tasks.controller.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NATRA</title>
+  <link rel="stylesheet" href="./src/styles/tailwind.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-primary-600">
+  <div class="flex flex-col items-center justify-center h-screen fade-in text-white">
+    <div class="mb-6 relative">
+      <div class="w-24 h-24 bg-white rounded-[2rem] shadow-2xl flex items-center justify-center transform rotate-3">
+        <i data-lucide="map-pin" class="w-12 h-12 text-primary-600 -rotate-3"></i>
+      </div>
+      <div class="absolute -bottom-2 -right-2 bg-emerald-400 w-6 h-6 rounded-full border-4 border-primary-600 mix-blend-screen"></div>
+    </div>
+    
+    <h1 class="text-4xl font-extrabold tracking-tight mb-2">NATRA</h1>
+    <p class="text-primary-100 font-medium tracking-wide">Mobile Employee App</p>
+    
+    <div class="absolute bottom-12 flex flex-col items-center gap-3">
+      <div class="spinner-circle"></div>
+      <span class="text-sm text-primary-200 font-medium">Memuat sistem...</span>
+    </div>
+  </div>
+
+  <script type="module">
+    import { Auth } from './src/core/auth/auth.js';
+    lucide.createIcons();
+    
+    setTimeout(() => {
+      const isAuthenticated = Auth.isAuthenticated();
+      if (isAuthenticated) {
+        window.location.replace('./pages/dashboard.html');
+      } else {
+        window.location.replace('./pages/login.html');
+      }
+    }, 1500);
+  </script>
+</body>
+</html>

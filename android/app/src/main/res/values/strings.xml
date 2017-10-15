@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">NATRA</string>
+    <string name="title_activity_main">NATRA</string>
+    <string name="package_name">com.natra.employee</string>
+    <string name="custom_url_scheme">com.natra.employee</string>
+</resources>

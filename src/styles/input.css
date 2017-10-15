@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import "./main.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  /* Mobile App Shell Layout Utilities */
+  .app-screen {
+    @apply flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-slate-50 shadow-2xl relative overflow-hidden;
+  }
+
+  /* Glassmorphism Navigation */
+  .glass-nav {
+    @apply bg-white/75 backdrop-blur-lg border-t border-slate-200/50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)];
+  }
+
+  .nav-item {
+    @apply flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 relative text-slate-400;
+  }
+
+  .nav-item.active {
+    @apply text-primary-600;
+  }
+
+  .nav-item.active::after {
+    content: '';
+    @apply absolute -top-3 w-8 h-1 bg-primary-500 rounded-b-md shadow-[0_2px_8px_rgba(14,165,233,0.5)];
+  }
+
+  /* Universal Cards */
+  .card {
+    @apply bg-white border-2 border-slate-100 rounded-2xl p-4 shadow-none;
+  }
+
+  /* Base Buttons */
+  .btn {
+    @apply flex items-center justify-center px-4 py-3 rounded-xl font-semibold transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100;
+  }
+
+  .btn-primary {
+    @apply bg-primary-600 text-white shadow-lg shadow-primary-600/30 hover:bg-primary-700 active:bg-primary-800;
+  }
+  
+  .btn-secondary {
+    @apply bg-slate-100 text-slate-700 hover:bg-slate-200 active:bg-slate-300;
+  }
+
+  .btn-danger {
+    @apply bg-danger text-white shadow-lg shadow-danger/30 hover:bg-red-600;
+  }
+
+  /* Form Elements */
+  .form-input {
+    @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all;
+  }
+
+  /* Loading Spinner */
+  .spinner-circle {
+    @apply w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin;
+  }
+}
+
+/* Page enter animations */
+.fade-in { animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hide scrollbar for clean UI */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
