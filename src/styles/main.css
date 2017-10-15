@@ -8,16 +8,16 @@
 /* ── CSS Custom Properties ──────────────────────────── */
 :root {
   /* Brand — Blue Palette */
-  --blue-50:  #eff6ff;
-  --blue-100: #dbeafe;
-  --blue-200: #bfdbfe;
-  --blue-300: #93c5fd;
-  --blue-400: #60a5fa;
-  --blue-500: #3b82f6;
-  --blue-600: #2563eb;
-  --blue-700: #1d4ed8;
-  --blue-800: #1e40af;
-  --blue-900: #1e3a8a;
+  --blue-50:  #f0f3ff;
+  --blue-100: #e0e7ff;
+  --blue-200: #c7d2fe;
+  --blue-300: #a5b4fc;
+  --blue-400: #818cf8;
+  --blue-500: #5170ff;
+  --blue-600: #4358db;
+  --blue-700: #3a4ab5;
+  --blue-800: #313d91;
+  --blue-900: #293273;
 
   /* Semantic tokens */
   --primary:        var(--blue-600);

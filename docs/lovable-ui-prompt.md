@@ -12,7 +12,7 @@
 
 ## 🎨 Visual Identity & Aesthetics
 - **Theme:** Clean, modern "Flat Design" with subtle glassmorphism.
-- **Primary Color:** Deep Blue (#2563eb) and Sky Blue (#0ea5e9).
+- **Primary Color:** Brand Blue (#5170ff).
 - **Secondary Colors:** Emerald Green (Success), Amber (Warnings), and Slate (Neutrals).
 - **Typography:** **Plus Jakarta Sans** (Primary font). Use font-weight 800 for titles to give a premium feel.
 - **Design Elements:** 
