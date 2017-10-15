@@ -5,7 +5,7 @@
 import { ProfileService } from './profile.service.js';
 import { AuthService } from '../auth/auth.service.js';
 import { Auth } from '../../core/auth/auth.js';
-import { showToast, setLoading, setText, getInitials } from '../../utils/ui-helpers.js';
+import { showToast, showConfirm, setLoading, setText, getInitials } from '../../utils/ui-helpers.js';
 import { ThemeManager } from '../../core/theme/theme-manager.js';
 
 const ProfileController = {
@@ -188,6 +188,14 @@ const ProfileController = {
   },
 
   async _handleLogout() {
+    const confirmed = await showConfirm(
+      'Keluar dari NATRA?', 
+      'Sesi Anda akan dihentikan dan Anda harus masuk kembali untuk mengakses data.',
+      { okText: 'Keluar', cancelText: 'Batal', isDestructive: true }
+    );
+
+    if (!confirmed) return;
+
     const btn = document.getElementById('logout-btn');
     setLoading(btn, true, 'Keluar...');
     try {

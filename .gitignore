@@ -1,0 +1,13 @@
+node_modules/
+dist/
+www/
+android/app/build/
+android/.gradle/
+android/local.properties
+android/signing.properties
+android/*.jks
+*.log
+.DS_Store
+.vscode/
+package-lock.json
+capacitor-welcome/

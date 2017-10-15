@@ -808,78 +808,176 @@ textarea.form-input {
   transform: translateX(1.25rem); /* 20px */
 }
 
-/* ── Dark Mode Overrides (Components) ───────────────────────── */
-html.dark .form-input {
-  background: var(--gray-100);
-  color: var(--gray-900);
+/* ── iOS Style Alerts & Notifications ──────────────────────── */
+.ios-alert-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-8);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
 }
 
-html.dark .form-input:focus {
-  background: var(--card-bg);
+.ios-alert-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-html.dark .punch-card-minimal,
-html.dark .task-stack-hero,
-html.dark .notif-card-ios,
-html.dark .ios-settings-group,
-html.dark .ios-bottom-sheet {
-  background: var(--card-bg);
-  border-color: var(--gray-200);
+.ios-alert {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  width: 100%;
+  max-width: 280px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  text-align: center;
 }
 
-html.dark .task-card-ios {
-  background: var(--card-bg);
-  background-image: none;
-  border-color: var(--gray-200);
+.ios-alert-overlay.active .ios-alert {
+  transform: scale(1);
 }
 
-html.dark .task-card-ios::before {
-  border-color: var(--card-bg) var(--card-bg) var(--gray-200) var(--gray-200);
+.ios-alert-body {
+  padding: 18px 16px;
 }
 
-html.dark .punch-badge-ios {
-  background: var(--app-bg);
-  border-color: var(--gray-200);
+.ios-alert-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
 }
 
-html.dark .punch-badge-ios.active {
-  background: var(--card-bg);
-  border-color: rgba(81, 112, 255, 0.4);
+.ios-alert-message {
+  font-size: 13px;
+  font-weight: 400;
+  color: #000;
+  line-height: 1.4;
 }
 
-html.dark .punch-icon-ios {
-  background: var(--gray-100);
-  border-color: var(--gray-200);
+.ios-alert-btns {
+  display: flex;
+  border-top: 0.5px solid rgba(0, 0, 0, 0.15);
 }
 
-html.dark .ios-time-big,
-html.dark .task-title-ios,
-html.dark .ios-task-title {
-  color: var(--gray-900);
+.ios-alert-btns-vertical {
+  flex-direction: column;
 }
 
-html.dark .task-meta-ios {
-  border-top-color: var(--gray-200);
+.ios-alert-btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 17px;
+  font-weight: 400;
+  color: #007aff;
+  background: transparent;
+  border: none;
+  border-right: 0.5px solid rgba(0, 0, 0, 0.15);
+  transition: background 0.1s;
 }
 
-html.dark .notif-card-ios:active,
-html.dark .ios-settings-row:active {
-  background-color: var(--gray-100);
+.ios-alert-btn:last-child {
+  border-right: none;
 }
 
-html.dark .ios-settings-row:not(:last-child)::after {
-  background-color: var(--gray-200);
+.ios-alert-btn:active {
+  background: rgba(0, 0, 0, 0.05);
 }
 
-html.dark .status-pill-ios {
-  background: rgba(81, 112, 255, 0.15);
-  color: #8499ff;
+.ios-alert-btn-bold {
+  font-weight: 600;
 }
 
-html.dark .ios-switch-slider {
-  background-color: var(--gray-300);
+.ios-alert-btn-danger {
+  color: #ff3b30;
 }
 
-html.dark .ios-switch-slider:before {
-  background-color: var(--gray-800);
+/* Dynamic Island Toast Style */
+.ios-toast-container {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  width: auto;
+  min-width: 160px;
+  max-width: 90%;
+  pointer-events: none;
 }
+
+.ios-toast-pill {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-50px) scale(0.6);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ios-toast-pill.active {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.ios-toast-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ios-toast-message {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* Dark Mode Overrides for Alerts */
+html.dark .ios-alert {
+  background: rgba(44, 44, 46, 0.85);
+  color: white;
+}
+
+html.dark .ios-alert-title,
+html.dark .ios-alert-message {
+  color: white;
+}
+
+html.dark .ios-alert-btns {
+  border-top-color: rgba(255, 255, 255, 0.15);
+}
+
+html.dark .ios-alert-btn {
+  border-right-color: rgba(255, 255, 255, 0.15);
+}
+
+html.dark .ios-alert-btn:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+html.dark .ios-toast-pill {
+  background: rgba(255, 255, 255, 0.95);
+  color: black;
+}
+

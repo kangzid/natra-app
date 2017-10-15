@@ -4,45 +4,127 @@
 
 let _toastTimeout = null;
 
+/**
+ * iOS Style Dynamic Island / Pill Notification
+ */
 export function showToast(message, type = 'info', duration = 3000) {
-  let container = document.getElementById('toast-container');
+  let container = document.getElementById('ios-toast-container');
   if (!container) {
     container = document.createElement('div');
-    container.id = 'toast-container';
-    container.className = 'fixed top-4 inset-x-4 z-50 flex flex-col items-center gap-2 pointer-events-none';
+    container.id = 'ios-toast-container';
+    container.className = 'ios-toast-container';
     document.body.appendChild(container);
   }
 
-  const toast = document.createElement('div');
+  // Clear existing toast if any
+  container.innerHTML = '';
+
+  const pill = document.createElement('div');
+  pill.className = 'ios-toast-pill';
   
-  const typeMap = {
-    success: { bg: 'bg-emerald-50 text-emerald-800 border-emerald-200', icon: '<i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i>' },
-    error: { bg: 'bg-red-50 text-red-800 border-red-200', icon: '<i data-lucide="x-circle" class="w-5 h-5 text-red-500"></i>' },
-    warning: { bg: 'bg-amber-50 text-amber-800 border-amber-200', icon: '<i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>' },
-    info: { bg: 'bg-blue-50 text-blue-800 border-blue-200', icon: '<i data-lucide="info" class="w-5 h-5 text-blue-500"></i>' },
+  const icons = {
+    success: '<i data-lucide="check-circle-2" class="text-emerald-400"></i>',
+    error: '<i data-lucide="x-circle" class="text-red-400"></i>',
+    warning: '<i data-lucide="alert-triangle" class="text-amber-400"></i>',
+    info: '<i data-lucide="info" class="text-blue-400"></i>',
   };
 
-  const style = typeMap[type] || typeMap.info;
-
-  toast.className = `flex items-center gap-3 w-full max-w-sm p-4 rounded-2xl shadow-lg border ${style.bg} transition-all duration-300 transform -translate-y-4 opacity-0`;
-  toast.innerHTML = `<div class="shrink-0">${style.icon}</div><div class="text-sm font-medium leading-tight">${message}</div>`;
+  pill.innerHTML = `
+    <div class="ios-toast-icon">${icons[type] || icons.info}</div>
+    <div class="ios-toast-message">${message}</div>
+  `;
   
-  container.appendChild(toast);
-  
-  if (window.lucide) window.lucide.createIcons({ root: toast });
+  container.appendChild(pill);
+  if (window.lucide) window.lucide.createIcons({ root: pill });
 
+  // Trigger animation
   requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      toast.classList.remove('-translate-y-4', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-    });
+    pill.classList.add('active');
   });
 
-  setTimeout(() => {
-    toast.classList.remove('translate-y-0', 'opacity-100');
-    toast.classList.add('-translate-y-4', 'opacity-0');
-    setTimeout(() => toast.remove(), 300);
+  if (_toastTimeout) clearTimeout(_toastTimeout);
+  _toastTimeout = setTimeout(() => {
+    pill.classList.remove('active');
+    setTimeout(() => pill.remove(), 400);
   }, duration);
+}
+
+/**
+ * iOS Style Alert Dialog (OK only)
+ */
+export function showAlert(title, message, btnText = 'OK') {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'ios-alert-overlay';
+    
+    overlay.innerHTML = `
+      <div class="ios-alert">
+        <div class="ios-alert-body">
+          <div class="ios-alert-title">${title}</div>
+          <div class="ios-alert-message">${message}</div>
+        </div>
+        <div class="ios-alert-btns">
+          <button class="ios-alert-btn ios-alert-btn-bold" id="ios-alert-ok">${btnText}</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    overlay.querySelector('#ios-alert-ok').onclick = () => {
+      overlay.classList.remove('active');
+      setTimeout(() => {
+        overlay.remove();
+        resolve();
+      }, 250);
+    };
+  });
+}
+
+/**
+ * iOS Style Confirmation Dialog (Cancel / OK)
+ */
+export function showConfirm(title, message, options = {}) {
+  const { 
+    okText = 'OK', 
+    cancelText = 'Cancel', 
+    isDestructive = false 
+  } = options;
+
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'ios-alert-overlay';
+    
+    overlay.innerHTML = `
+      <div class="ios-alert">
+        <div class="ios-alert-body">
+          <div class="ios-alert-title">${title}</div>
+          <div class="ios-alert-message">${message}</div>
+        </div>
+        <div class="ios-alert-btns">
+          <button class="ios-alert-btn" id="ios-alert-cancel">${cancelText}</button>
+          <button class="ios-alert-btn ios-alert-btn-bold ${isDestructive ? 'ios-alert-btn-danger' : ''}" id="ios-alert-ok">${okText}</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    const close = (result) => {
+      overlay.classList.remove('active');
+      setTimeout(() => {
+        overlay.remove();
+        resolve(result);
+      }, 250);
+    };
+
+    overlay.querySelector('#ios-alert-cancel').onclick = () => close(false);
+    overlay.querySelector('#ios-alert-ok').onclick = () => close(true);
+  });
 }
 
 export function setLoading(btn, loading, loadingText = 'Loading...', originalText = null) {

@@ -7,6 +7,7 @@ import { GpsService } from './gps.service.js';
 import { Auth } from '../../core/auth/auth.js';
 import { Storage } from '../../core/storage/storage.js';
 import { showToast } from '../../utils/ui-helpers.js';
+import { BgTrackingManager } from '../../core/gps/bg-tracking-manager.js';
 
 const TRACKING_INTERVAL_MS = 15_000; // 15 seconds
 
@@ -36,11 +37,18 @@ const GpsController = {
     this._isTracking = true;
     Storage.setTrackingActive(true);
 
-    // First send immediately
-    await this._sendOnce(employeeId);
-
-    // Then on interval
-    this._interval = setInterval(() => this._sendOnce(employeeId), TRACKING_INTERVAL_MS);
+    // Start native background service if available
+    if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+      try {
+        await BgTrackingManager.start();
+      } catch (e) {
+        console.error('[GpsController] BgTracking start failed:', e);
+      }
+    } else {
+      // Fallback/Web Mode: keep using interval
+      await this._sendOnce(employeeId);
+      this._interval = setInterval(() => this._sendOnce(employeeId), TRACKING_INTERVAL_MS);
+    }
 
     console.info('[GpsController] Tracking started');
     this._updateUI(true);
@@ -49,11 +57,16 @@ const GpsController = {
   /**
    * Stop auto-tracking.
    */
-  stopTracking() {
+  async stopTracking() {
     if (this._interval) {
       clearInterval(this._interval);
       this._interval = null;
     }
+
+    if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+      await BgTrackingManager.stop();
+    }
+
     this._isTracking = false;
     Storage.setTrackingActive(false);
     console.info('[GpsController] Tracking stopped');
@@ -65,9 +78,18 @@ const GpsController = {
    */
   async toggle() {
     if (this._isTracking) {
-      this.stopTracking();
+      await this.stopTracking();
       showToast('GPS tracking dinonaktifkan', 'info');
     } else {
+      // Background Location Hint for Android
+      if (window.Capacitor && window.Capacitor.getPlatform() === 'android') {
+        const hasBackgroundHint = localStorage.getItem('natra_bg_hint_shown');
+        if (!hasBackgroundHint) {
+          localStorage.setItem('natra_bg_hint_shown', 'true');
+          alert('PENTING: Agar pelacakan tetap berjalan saat aplikasi ditutup, pilih "Izinkan Sepanjang Waktu" (Allow all the time) pada pengaturan izin lokasi yang akan muncul.');
+        }
+      }
+
       showToast('Mengaktifkan GPS tracking...', 'info');
       await this.startTracking();
       if (this._isTracking) {
