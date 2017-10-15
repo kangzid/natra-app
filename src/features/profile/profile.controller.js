@@ -49,35 +49,100 @@ const ProfileController = {
   },
 
   _bindEvents() {
-    // Toggle change password form
-    const toggleBtn = document.getElementById('toggle-change-password');
-    const formEl = document.getElementById('change-password-form');
-    if (toggleBtn && formEl) {
-      toggleBtn.addEventListener('click', () => {
-        const isHidden = formEl.classList.contains('hidden');
-        formEl.classList.toggle('hidden', !isHidden);
-        toggleBtn.textContent = isHidden ? '✕ Batal' : '🔑 Ganti Password';
+    // --- Password Modal Logic ---
+    const modalOverlay = document.getElementById('pw-modal-overlay');
+    const openModalBtn = document.getElementById('btn-open-pw-modal');
+    const closeModalBtn = document.getElementById('btn-close-pw-modal');
+
+    if (openModalBtn && modalOverlay) {
+      openModalBtn.addEventListener('click', () => {
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
       });
     }
 
-    // Submit change password
+    if (closeModalBtn && modalOverlay) {
+      const closeModal = () => {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        document.getElementById('change-password-form')?.reset();
+        const errorEl = document.getElementById('pw-error');
+        if (errorEl) errorEl.classList.add('hidden');
+      };
+
+      closeModalBtn.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
+    }
+
+    // --- Privacy Modal Logic ---
+    const privOverlay = document.getElementById('privacy-modal-overlay');
+    const openPrivBtn = document.getElementById('btn-open-privacy-modal');
+    const closePrivBtn = document.getElementById('btn-close-privacy-modal');
+
+    if (openPrivBtn && privOverlay) {
+      openPrivBtn.addEventListener('click', () => {
+        privOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    if (closePrivBtn && privOverlay) {
+      const closePriv = () => {
+        privOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      };
+      closePrivBtn.addEventListener('click', closePriv);
+      privOverlay.addEventListener('click', (e) => {
+        if (e.target === privOverlay) closePriv();
+      });
+    }
+
+    // --- Dark Mode Toggle (Simulated) ---
+    const darkToggle = document.getElementById('dark-mode-toggle');
+    if (darkToggle) {
+      darkToggle.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          showToast('Mode Gelap diaktifkan (Simulasi)', 'info');
+          // Fake transition effect
+          document.body.style.filter = 'invert(0.9) hue-rotate(180deg)';
+          document.body.style.background = '#000';
+        } else {
+          showToast('Mode Terang diaktifkan', 'info');
+          document.body.style.filter = '';
+          document.body.style.background = '';
+        }
+      });
+    }
+
+    // --- Submit change password ---
     const changePwForm = document.getElementById('change-password-form');
     if (changePwForm) {
       changePwForm.addEventListener('submit', (e) => this._handleChangePassword(e));
     }
 
-    // Toggle password visibility (change password form)
+    // --- Toggle password visibility ---
     document.querySelectorAll('[data-toggle-password]').forEach((btn) => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
         const targetId = btn.dataset.togglePassword;
         const input = document.getElementById(targetId);
         if (input) {
-          input.type = input.type === 'password' ? 'text' : 'password';
+          const isPassword = input.type === 'password';
+          input.type = isPassword ? 'text' : 'password';
+
+          // Update icon if possible
+          const icon = btn.querySelector('i');
+          if (icon) {
+            icon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+            lucide.createIcons();
+          }
         }
       });
     });
 
-    // Logout
+    // --- Logout ---
     document.getElementById('logout-btn')?.addEventListener('click', () => this._handleLogout());
   },
 
@@ -89,35 +154,39 @@ const ProfileController = {
     const btn = document.getElementById('change-pw-btn');
     const errorEl = document.getElementById('pw-error');
 
-    if (errorEl) errorEl.textContent = '';
-
-    if (!currentPw || !newPw || !confirmPw) {
-      if (errorEl) errorEl.textContent = 'Semua field wajib diisi.';
-      return;
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.classList.add('hidden');
     }
 
     if (newPw !== confirmPw) {
-      if (errorEl) errorEl.textContent = 'Konfirmasi password tidak cocok.';
+      if (errorEl) {
+        errorEl.textContent = 'Konfirmasi password tidak cocok.';
+        errorEl.classList.remove('hidden');
+      }
       return;
     }
 
-    if (newPw.length < 8) {
-      if (errorEl) errorEl.textContent = 'Password baru minimal 8 karakter.';
-      return;
-    }
-
-    setLoading(btn, true, 'Menyimpan...');
+    setLoading(btn, true, 'Memperbarui...');
     try {
       await ProfileService.changePassword(currentPw, newPw, confirmPw);
-      showToast('Password berhasil diubah!', 'success');
+      showToast('Password Anda berhasil diperbarui!', 'success');
+
+      // Close Modal
+      const modalOverlay = document.getElementById('pw-modal-overlay');
+      if (modalOverlay) {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
       e.target.reset();
-      document.getElementById('change-password-form')?.classList.add('hidden');
-      document.getElementById('toggle-change-password').textContent = '🔑 Ganti Password';
     } catch (err) {
-      if (errorEl) errorEl.textContent = err.message || 'Gagal mengubah password.';
+      if (errorEl) {
+        errorEl.textContent = err.message || 'Gagal mengubah password. Pastikan password lama benar.';
+        errorEl.classList.remove('hidden');
+      }
       showToast(err.message || 'Gagal mengubah password', 'error');
     } finally {
-      setLoading(btn, false, 'Simpan Password');
+      setLoading(btn, false, 'Perbarui Password Sekarang');
     }
   },
 
@@ -126,6 +195,8 @@ const ProfileController = {
     setLoading(btn, true, 'Keluar...');
     try {
       await AuthService.logout();
+    } catch (err) {
+      console.error('Logout error:', err);
     } finally {
       Auth.logout();
     }

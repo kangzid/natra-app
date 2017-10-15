@@ -35,6 +35,8 @@ const DashboardController = {
     if (avatarEl) avatarEl.textContent = getInitials(name);
   },
 
+  _attendanceChart: null,
+
   async _loadDashboard() {
     const loadingEl = document.getElementById('dashboard-loading');
     const contentEl = document.getElementById('dashboard-content');
@@ -61,46 +63,123 @@ const DashboardController = {
       });
       data.monthly_attendance = { present, late, absent };
 
-      // Map unread notifications (API returns an array directly)
+      // Map unread notifications
       data.unread_notifications = notifRes?.count ?? (Array.isArray(notifRes) ? notifRes.length : (Array.isArray(notifRes?.data) ? notifRes.data.length : 0));
 
       this._renderDashboard(data);
-      if (contentEl) contentEl.classList.remove('hidden');
+      
+      // Small delay to ensure DOM is ready for animation & chart
+      setTimeout(() => {
+        if (contentEl) {
+          contentEl.classList.remove('hidden');
+          contentEl.style.display = 'block'; // Force display to ensure height calc
+        }
+        if (loadingEl) loadingEl.classList.add('hidden');
+        
+        // Render Chart after content is visible for proper canvas sizing
+        this._renderAttendanceChart(data.monthly_attendance);
+      }, 50);
+
     } catch (err) {
+      console.error('Dashboard Error:', err);
       showToast(err.message || 'Gagal memuat dashboard', 'error');
-    } finally {
       if (loadingEl) loadingEl.classList.add('hidden');
     }
   },
 
+  _renderAttendanceChart(monthly) {
+    const ctx = document.getElementById('attendanceDonutChart')?.getContext('2d');
+    if (!ctx) return;
+
+    const present = monthly?.present ?? 0;
+    const late = monthly?.late ?? 0;
+    const absent = monthly?.absent ?? 0;
+    const total = present + late + absent;
+    
+    // Calculate percentage
+    const percentage = total > 0 ? Math.round((present / total) * 100) : 0;
+    setText('presence-percentage', `${percentage}%`);
+
+    if (this._attendanceChart) {
+      this._attendanceChart.destroy();
+    }
+
+    this._attendanceChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Hadir', 'Telat', 'Absen'],
+        datasets: [{
+          data: [present, late, absent],
+          backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+          borderWidth: 0,
+          cutout: '82%'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        },
+        elements: {
+          arc: {
+            borderRadius: 10
+          }
+        }
+      }
+    });
+  },
+
   _renderDashboard(data) {
-    // Attendance today
+    // 1. Smart Attendance Today - Punch Style
     let att = data.today_attendance;
     if (Array.isArray(att)) att = att.length > 0 ? att[0] : null;
 
+    const checkin = att?.check_in ? formatTime(att.check_in) : '--:--';
+    const checkout = att?.check_out ? formatTime(att.check_out) : '--:--';
+    
+    setText('att-checkin', checkin);
+    setText('att-checkout', checkout);
+    
+    // Toggle active state for punch badges
+    const badgeIn = document.getElementById('badge-checkin');
+    const badgeOut = document.getElementById('badge-checkout');
+    
+    if (checkin !== '--:--') badgeIn?.classList.add('active');
+    else badgeIn?.classList.remove('active');
+    
+    if (checkout !== '--:--') badgeOut?.classList.add('active');
+    else badgeOut?.classList.remove('active');
+
+    // Status text
     const statusEl = document.getElementById('att-status');
-    const checkInEl = document.getElementById('att-checkin');
-    const checkOutEl = document.getElementById('att-checkout');
-
-    if (att?.status) {
-      const statusMap = { present: 'Hadir', late: 'Terlambat', absent: 'Absen' };
-      if (statusEl) statusEl.textContent = statusMap[att.status] || att.status;
-    } else {
-      if (statusEl) statusEl.textContent = 'Belum Absen';
+    if (statusEl) {
+      if (checkout !== '--:--') statusEl.textContent = 'Selesai';
+      else if (checkin !== '--:--') statusEl.textContent = 'Bekerja';
+      else statusEl.textContent = 'Belum Absen';
     }
-    if (checkInEl) checkInEl.textContent = att?.check_in ? formatTime(att.check_in) : '--:--';
-    if (checkOutEl) checkOutEl.textContent = att?.check_out ? formatTime(att.check_out) : '--:--';
 
-    // Tasks summary
+    // 2. Smart Tasks & Priority Focus
     const pending = data.pending_tasks ?? 0;
     const inProgress = data.in_progress_tasks ?? 0;
     const completed = data.completed_tasks_this_month ?? 0;
-    const total = pending + inProgress + completed; // Kalkulasi total
 
-    setText('tasks-total', total);
     setText('tasks-pending', pending);
     setText('tasks-inprogress', inProgress);
     setText('tasks-completed', completed);
+
+    // Find focus task (First in-progress task from data.active_tasks_list if available)
+    const activeTasks = data.active_tasks_list || [];
+    const focusTask = activeTasks.find(t => t.status === 'proses') || activeTasks[0];
+    
+    if (focusTask) {
+      setText('focus-task-title', focusTask.title);
+      setText('focus-task-priority', focusTask.priority === 'urgent' ? 'Segera' : 'Aktif');
+    } else {
+      setText('focus-task-title', 'Siap untuk tugas baru?');
+      setText('focus-task-priority', 'Santai');
+    }
 
     // Notifications unread badge
     const unread = data.unread_notifications ?? 0;
@@ -116,6 +195,11 @@ const DashboardController = {
     setText('monthly-present', monthly?.present ?? 0);
     setText('monthly-late', monthly?.late ?? 0);
     setText('monthly-absent', monthly?.absent ?? 0);
+
+    // Re-initialize icons for new dynamic widgets
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
   },
 
   _bindEvents() {

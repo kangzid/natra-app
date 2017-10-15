@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 @import "./main.css";
+@import "./components.css";
 
 @tailwind base;
 @tailwind components;
@@ -33,13 +33,12 @@
   }
 
   .nav-item.active::after {
-    content: '';
-    @apply absolute -top-3 w-8 h-1 bg-primary-500 rounded-b-md shadow-[0_2px_8px_rgba(14,165,233,0.5)];
+    display: none; /* Removed active line for modern look */
   }
 
-  /* Universal Cards */
+  /* Universal Cards - Updated to Shadowless */
   .card {
-    @apply bg-white border-2 border-slate-100 rounded-2xl p-4 shadow-none;
+    @apply bg-white border border-slate-100 rounded-2xl p-4 shadow-none;
   }
 
   /* Base Buttons */
@@ -70,11 +69,13 @@
   }
 }
 
-/* Page enter animations */
-.fade-in { animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+/* Page enter animations - Safer implementation */
+.fade-in { 
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+}
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* Hide scrollbar for clean UI */

@@ -70,39 +70,28 @@ const TasksController = {
 
   _taskCardHTML(task) {
     const isUrgent = this._isDueUrgent(task.due_date);
-    const borderCls = isUrgent ? 'border-red-200' : 'border-slate-100';
     
-    // Convert priority string color block
-    const priorityColors = {
-      urgent: 'bg-red-500', high: 'bg-amber-500', medium: 'bg-blue-500', low: 'bg-slate-400'
-    };
-    const pColor = priorityColors[task.priority] || priorityColors.low;
-
     return `
-      <div class="bg-white rounded-2xl mb-4 border ${borderCls} shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] overflow-hidden transition-all active:scale-[0.98] cursor-pointer" data-task-id="${task.id}">
-        <div class="h-1 ${pColor} w-full"></div>
-        <div class="p-4 relative">
-          <!-- Header Meta -->
-          <div class="flex justify-between items-start mb-3">
-             <div class="flex flex-wrap gap-2">
-               ${priorityBadge(task.priority)}
-               ${statusBadge(task.status)}
-             </div>
+      <div class="task-card-ios active:scale-[0.98] cursor-pointer" data-task-id="${task.id}">
+        <div class="flex justify-between items-start mb-3">
+          <div class="flex flex-wrap gap-2">
+            ${priorityBadge(task.priority)}
+            ${statusBadge(task.status)}
           </div>
-          
-          <h3 class="text-base font-bold text-slate-800 leading-tight mb-2 pr-6">${task.title}</h3>
-          ${task.description ? `<p class="text-xs text-slate-500 line-clamp-2 mb-4 leading-relaxed">${task.description}</p>` : '<div class="mb-4"></div>'}
-          
-          <!-- Footer -->
-          <div class="flex items-center justify-between pt-3 border-t border-slate-50 mt-auto">
-            <span class="flex items-center gap-1.5 text-xs font-semibold ${isUrgent ? 'text-red-500' : 'text-slate-400'}">
-              <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-              ${formatDate(task.due_date)}
-            </span>
-            <div class="w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center text-slate-400">
-              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-            </div>
+        </div>
+        
+        <h3 class="ios-task-title">${task.title}</h3>
+        
+        ${task.description ? `<p class="text-[13px] text-slate-500 line-clamp-2 mb-4 leading-snug font-medium">${task.description}</p>` : '<div class="mb-4"></div>'}
+        
+        <div class="flex items-center justify-between pt-3 border-t border-slate-50">
+          <div class="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-widest ${isUrgent ? 'text-red-500' : 'text-primary-500'}">
+            <div class="w-2 h-2 rounded-full ${isUrgent ? 'bg-red-500' : 'bg-primary-500'} animate-pulse"></div>
+            <span>${isUrgent ? 'Segera Berakhir' : 'Tenggat'}</span>
           </div>
+          <span class="text-[11px] font-extrabold text-slate-400">
+            ${formatDate(task.due_date)}
+          </span>
         </div>
       </div>
     `;
