@@ -1,43 +1,219 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NATRA</title>
   <link rel="stylesheet" href="./src/styles/tailwind.css">
   <script src="./src/core/theme/theme-init.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* iOS Luxe Splash Styles */
+    .splash-bg {
+      background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+      height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dark .splash-bg {
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    }
+
+    .logo-animate {
+      animation: logoEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes logoEntrance {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+        filter: blur(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    /* Modern iOS Spinner */
+    .ios-loader {
+      width: 24px;
+      height: 24px;
+      border: 2px solid rgba(0, 0, 0, 0.05);
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .dark .ios-loader {
+      border-color: rgba(255, 255, 255, 0.1);
+      border-top-color: #60a5fa;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Embedded Offline Alert Styles */
+    .offline-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .offline-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .ios-alert {
+      width: 270px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transform: scale(1.1);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dark .ios-alert {
+      background: rgba(30, 41, 59, 0.9);
+    }
+
+    .offline-overlay.active .ios-alert {
+      transform: scale(1);
+    }
+
+    .ios-alert-body {
+      padding: 19px 16px;
+      text-align: center;
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .dark .ios-alert-body {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .ios-alert-title {
+      font-weight: 700;
+      font-size: 17px;
+      margin-bottom: 4px;
+      color: #000;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .dark .ios-alert-title {
+      color: #fff;
+    }
+
+    .ios-alert-message {
+      font-size: 13px;
+      line-height: 1.4;
+      color: #333;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .dark .ios-alert-message {
+      color: #ccc;
+    }
+
+    .ios-alert-btn {
+      padding: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #007aff;
+      background: transparent;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .ios-alert-btn:active {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  </style>
 </head>
-<body class="bg-primary-600 dark:bg-slate-900 transition-colors duration-300">
-  <div class="flex flex-col items-center justify-center h-screen fade-in text-white">
-    <div class="mb-6 relative">
-      <div class="w-24 h-24 bg-white rounded-[2rem] shadow-2xl flex items-center justify-center transform rotate-3">
-        <i data-lucide="map-pin" class="w-12 h-12 text-primary-600 dark:text-slate-800 -rotate-3"></i>
-      </div>
-      <div class="absolute -bottom-2 -right-2 bg-emerald-400 w-6 h-6 rounded-full border-4 border-primary-600 mix-blend-screen"></div>
+
+<body class="splash-bg transition-colors duration-500 overflow-hidden">
+
+  <div class="flex flex-col items-center justify-center">
+    <div class="mb-12 logo-animate">
+      <img src="./src/img/natra-logo.png" alt="NATRA Logo" class="w-64 h-auto drop-shadow-2xl">
     </div>
-    
-    <h1 class="text-4xl font-extrabold tracking-tight mb-2">NATRA</h1>
-    <p class="text-primary-100 font-medium tracking-wide">Mobile Employee App</p>
-    
-    <div class="absolute bottom-12 flex flex-col items-center gap-3">
-      <div class="spinner-circle"></div>
-      <span class="text-sm text-primary-200 font-medium">Memuat sistem...</span>
+
+    <div class="flex flex-col items-center mt-4">
+      <div class="ios-loader"></div>
+      <p class="text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-[0.25em] mt-6">
+        Smart Multi-Tenant HRIS
+      </p>
+    </div>
+  </div>
+
+  <!-- Offline Alert Overlay -->
+  <div id="offline-overlay" class="offline-overlay">
+    <div class="ios-alert">
+      <div class="ios-alert-body">
+        <div class="ios-alert-title">Tidak Ada Koneksi</div>
+        <div class="ios-alert-message">Aplikasi memerlukan koneksi internet untuk melanjutkan. Silakan periksa koneksi
+          Anda.</div>
+      </div>
+      <button class="ios-alert-btn" onclick="checkConnectionAndInit()">Coba Lagi</button>
     </div>
   </div>
 
   <script type="module">
     import { Auth } from './src/core/auth/auth.js';
-    lucide.createIcons();
-    
-    setTimeout(() => {
-      const isAuthenticated = Auth.isAuthenticated();
-      if (isAuthenticated) {
-        window.location.replace('./pages/dashboard.html');
-      } else {
-        window.location.replace('./pages/login.html');
+
+    window.checkConnectionAndInit = function () {
+      const overlay = document.getElementById('offline-overlay');
+
+      if (!navigator.onLine) {
+        overlay.classList.add('active');
+        return;
       }
-    }, 1500);
+
+      overlay.classList.remove('active');
+
+      // Proceed with normal init
+      setTimeout(() => {
+        const isAuthenticated = Auth.isAuthenticated();
+        if (isAuthenticated) {
+          window.location.replace('./pages/dashboard.html');
+        } else {
+          window.location.replace('./pages/login.html');
+        }
+      }, 1500);
+    };
+
+    // Initial check
+    document.addEventListener('DOMContentLoaded', () => {
+      checkConnectionAndInit();
+    });
+
+    // Listen for connection recovery
+    window.addEventListener('online', () => {
+      checkConnectionAndInit();
+    });
   </script>
 </body>
+
 </html>

@@ -12,52 +12,80 @@
 </head>
 
 <body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-300 flex items-center justify-center min-h-screen p-4">
+  <!-- Decorative iOS-style blurred blobs -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div
+      class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-blue-400/20 rounded-full blur-[100px] animate-pulse">
+    </div>
+    <div
+      class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-emerald-400/20 rounded-full blur-[100px] animate-pulse"
+      style="animation-delay: 1s;">
+    </div>
+  </div>
+
   <div class="w-full max-w-sm fade-in">
     <!-- Header with Logo -->
-    <div class="text-center mb-10">
-      <img src="../src/img/natra-logo.png" alt="NATRA Logo" class="mx-auto w-48 h-auto mb-2">
+    <div class="text-center mb-12">
+      <img src="../src/img/natra-logo.png" alt="NATRA Logo" class="mx-auto w-52 h-auto mb-4 drop-shadow-sm">
+      <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em]">Smart Multi-Tenant
+        HRIS</p>
     </div>
 
     <!-- Form Card -->
-    <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-slate-700 transition-colors">
-      <form id="login-form" class="space-y-5">
+    <div
+      class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-none border border-white dark:border-slate-700 transition-all">
+      <div class="mb-8">
+        <h2 class="text-2xl font-extrabold text-slate-800 dark:text-white mb-1">Selamat Datang</h2>
+        <p class="text-sm text-slate-400 font-medium">Silakan masuk untuk melanjutkan</p>
+      </div>
 
-        <div class="space-y-2">
-          <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Email Address</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <i data-lucide="mail" class="h-5 w-5 text-slate-400"></i>
+      <form id="login-form" class="space-y-6">
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
+            EMAIL PEGAWAI</label>
+          <div class="relative group">
+            <div
+              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-primary-500">
+              <i data-lucide="user" class="h-5 w-5 text-slate-300"></i>
             </div>
-            <input type="email" id="email" class="form-input pl-11" placeholder="Masukkan email Anda" required>
+            <input type="email" id="email"
+              class="w-full bg-slate-100/50 dark:bg-slate-900/50 border-none rounded-2xl py-4 pl-12 pr-4 text-slate-800 dark:text-white placeholder:text-slate-300 focus:ring-2 focus:ring-primary-500/20 transition-all outline-none"
+              placeholder="id@perusahaan.com" required>
           </div>
         </div>
 
-        <div class="space-y-2">
-          <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <i data-lucide="lock" class="h-5 w-5 text-slate-400"></i>
+        <div class="space-y-1.5">
+          <label
+            class="block text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">KATA
+            SANDI</label>
+          <div class="relative group">
+            <div
+              class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-primary-500">
+              <i data-lucide="lock" class="h-5 w-5 text-slate-300"></i>
             </div>
-            <input type="password" id="password" class="form-input pl-11 pr-11" placeholder="Masukkan password"
-              required>
+            <input type="password" id="password"
+              class="w-full bg-slate-100/50 dark:bg-slate-900/50 border-none rounded-2xl py-4 pl-12 pr-12 text-slate-800 dark:text-white placeholder:text-slate-300 focus:ring-2 focus:ring-primary-500/20 transition-all outline-none"
+              placeholder="••••••••" required>
             <button type="button" id="toggle-pwd"
-              class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 outline-none">
+              class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-300 hover:text-slate-500 transition-colors">
               <i data-lucide="eye" id="eye-icon" class="h-5 w-5"></i>
             </button>
           </div>
         </div>
 
-        <div class="pt-2">
-          <button type="submit" id="login-btn" class="btn btn-primary w-full text-lg shadow-primary-500/25">
-            Masuk Sekarang
-            <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+        <div class="pt-4">
+          <button type="submit" id="login-btn"
+            class="w-full bg-primary-600 hover:bg-primary-700 active:scale-95 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary-500/30 transition-all flex items-center justify-center gap-2">
+            <span>Masuk Sekarang</span>
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
           </button>
         </div>
       </form>
     </div>
 
-    <div class="mt-8 text-center">
-      <p class="text-sm text-slate-400 dark:text-slate-500 font-medium">Internal System &copy; 2026 NATRA</p>
+    <div class="mt-12 text-center">
+      <p class="text-[10px] font-bold text-slate-300 dark:text-slate-600 tracking-[0.2em] uppercase">Powered by NATRA &bull;
+        v1.2.0</p>
     </div>
   </div>
 

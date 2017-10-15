@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NATRA - Slip Gaji</title>
+  <link rel="stylesheet" href="../src/styles/tailwind.css">
+  <script src="../src/core/theme/theme-init.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 pb-12">
+  <div class="app-wrap">
+    
+    <!-- Top Header - Matching Attendance Style -->
+    <header class="module-header bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-700 sticky top-0 z-[100]">
+      <div class="module-header-row flex items-center gap-4 px-5 h-16">
+        <button onclick="window.history.back()" class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
+          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+        <h1 class="text-lg font-bold text-slate-800 dark:text-white">Slip Gaji</h1>
+        <div class="ml-auto">
+          <span class="text-[10px] font-bold text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-2 py-1 rounded-full uppercase tracking-widest">April 2026</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="px-5 py-6 space-y-8">
+      
+      <!-- Summary Hero Card - iOS 18 Style -->
+      <div class="relative group">
+        <div class="absolute -inset-1 bg-gradient-to-r from-primary-600 to-blue-400 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
+        <div class="relative bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+          <!-- Decorative Blur Circles -->
+          <div class="absolute -top-12 -right-12 w-32 h-32 bg-primary-500/10 rounded-full blur-3xl"></div>
+          <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
+          
+          <div class="relative flex flex-col items-center">
+            <p class="text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] mb-3">Total Take Home Pay</p>
+            <div class="flex items-start gap-1">
+              <span class="text-xl font-bold text-slate-400 mt-2">Rp</span>
+              <h2 class="text-5xl font-extrabold text-slate-900 dark:text-white tracking-tighter">7.450.000</h2>
+            </div>
+            
+            <div class="mt-8 w-full flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-100 dark:border-slate-700">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm">
+                  <i data-lucide="building-2" class="w-5 h-5 text-primary-500"></i>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold text-slate-400 uppercase">Transfer ke BCA</p>
+                  <p class="text-xs font-extrabold text-slate-700 dark:text-slate-200">**** 8829</p>
+                </div>
+              </div>
+              <div class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                Berhasil
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- iOS Style Grouped List: Earnings -->
+      <div class="space-y-3">
+        <h3 class="px-5 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Rincian Pendapatan</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-[2rem] overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700">
+          <!-- Row 1 -->
+          <div class="flex items-center justify-between px-6 py-5 border-b border-slate-50 dark:border-slate-700/50 active:bg-slate-50 dark:active:bg-slate-700/30 transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600">
+                <i data-lucide="briefcase" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-[13px] font-extrabold text-slate-800 dark:text-slate-200">Gaji Pokok</p>
+                <p class="text-[11px] text-slate-400 font-medium">Januari 2026</p>
+              </div>
+            </div>
+            <p class="text-[14px] font-extrabold text-slate-900 dark:text-white">Rp 5.500.000</p>
+          </div>
+          <!-- Row 2 -->
+          <div class="flex items-center justify-between px-6 py-5 border-b border-slate-50 dark:border-slate-700/50 active:bg-slate-50 dark:active:bg-slate-700/30 transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600">
+                <i data-lucide="utensils" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-[13px] font-extrabold text-slate-800 dark:text-slate-200">Tunjangan Makan</p>
+                <p class="text-[11px] text-slate-400 font-medium">Daily Allowance</p>
+              </div>
+            </div>
+            <p class="text-[14px] font-extrabold text-slate-900 dark:text-white">Rp 550.000</p>
+          </div>
+          <!-- Row 3 -->
+          <div class="flex items-center justify-between px-6 py-5 active:bg-slate-50 dark:active:bg-slate-700/30 transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600">
+                <i data-lucide="zap" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-[13px] font-extrabold text-slate-800 dark:text-slate-200">Lembur</p>
+                <p class="text-[11px] text-slate-400 font-medium">12 Jam</p>
+              </div>
+            </div>
+            <p class="text-[14px] font-extrabold text-slate-900 dark:text-white">Rp 1.150.000</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- iOS Style Grouped List: Deductions -->
+      <div class="space-y-3">
+        <h3 class="px-5 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Rincian Potongan</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-[2rem] overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700">
+          <!-- Row 1 -->
+          <div class="flex items-center justify-between px-6 py-5 border-b border-slate-50 dark:border-slate-700/50">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-600">
+                <i data-lucide="file-warning" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-[13px] font-extrabold text-slate-800 dark:text-slate-200">PPh 21</p>
+                <p class="text-[11px] text-slate-400 font-medium">Pajak Penghasilan</p>
+              </div>
+            </div>
+            <p class="text-[14px] font-extrabold text-red-600">- Rp 215.000</p>
+          </div>
+          <!-- Row 2 -->
+          <div class="flex items-center justify-between px-6 py-5">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-600">
+                <i data-lucide="shield-half" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-[13px] font-extrabold text-slate-800 dark:text-slate-200">BPJS Ketenagakerjaan</p>
+                <p class="text-[11px] text-slate-400 font-medium">JHT & Jaminan Pensiun</p>
+              </div>
+            </div>
+            <p class="text-[14px] font-extrabold text-red-600">- Rp 335.000</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="pt-4 space-y-4">
+        <button id="btn-download-slip" class="w-full bg-primary-600 hover:bg-primary-700 text-white rounded-full py-5 flex items-center justify-center gap-3 active:scale-95 transition-all shadow-lg shadow-primary-500/20 group">
+          <i data-lucide="download" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i>
+          <span class="font-extrabold">Unduh Slip Gaji (PDF)</span>
+        </button>
+        
+        <div class="flex items-center justify-center gap-2">
+          <i data-lucide="lock" class="w-3.5 h-3.5 text-slate-300"></i>
+          <p class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Enskripsi SSL 256-bit Secure</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script type="module" src="../src/features/payroll/payroll.controller.js"></script>
+</body>
+</html>

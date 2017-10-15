@@ -39,12 +39,34 @@ const AttendanceController = {
   },
 
   async _loadToday() {
+    const loadingEl = document.getElementById('today-schedule-loading');
+    const contentEl = document.getElementById('today-schedule-content');
+    const weeklyLoadEl = document.getElementById('weekly-shift-loading');
+    const weeklyContentEl = document.getElementById('weekly-shift-content');
+
+    if (loadingEl) loadingEl.classList.remove('hidden');
+    if (contentEl) contentEl.classList.add('hidden');
+    if (weeklyLoadEl) weeklyLoadEl.classList.remove('hidden');
+    if (weeklyContentEl) weeklyContentEl.classList.add('hidden');
+
     try {
       const res = await AttendanceService.getToday();
       this._todayData = Array.isArray(res) ? res[0] : (res?.data || (res?.id ? res : null));
       this._renderTodayCard(this._todayData);
+
+      // Simple delay to mimic loading feel for skeleton demo
+      setTimeout(() => {
+        if (loadingEl) loadingEl.classList.add('hidden');
+        if (contentEl) contentEl.classList.remove('hidden');
+        if (weeklyLoadEl) weeklyLoadEl.classList.add('hidden');
+        if (weeklyContentEl) weeklyContentEl.classList.remove('hidden');
+      }, 800);
     } catch (err) {
       showToast('Gagal memuat data absensi hari ini', 'error');
+      if (loadingEl) loadingEl.classList.add('hidden');
+      if (contentEl) contentEl.classList.remove('hidden');
+      if (weeklyLoadEl) weeklyLoadEl.classList.add('hidden');
+      if (weeklyContentEl) weeklyContentEl.classList.remove('hidden');
     }
   },
 

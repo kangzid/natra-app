@@ -25,19 +25,26 @@
           <h2 class="text-2xl font-extrabold tracking-tight" id="user-name">Memuat...</h2>
         </div>
         <div
-          class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-xl font-bold shadow-sm border border-white/10"
+          class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-xl font-bold shadow-sm border border-white/10 overflow-hidden"
           id="user-avatar">
-          --
+          <img src="" id="user-avatar-img" class="w-full h-full object-cover hidden" alt="Profile">
+          <span id="user-avatar-text">--</span>
         </div>
       </div>
 
       <div
-        class="flex justify-between items-center bg-black/10 rounded-2xl p-4 backdrop-blur-sm border border-white/10">
+        class="flex justify-between items-center bg-black/10 rounded-[2rem] p-5 backdrop-blur-sm border border-white/10">
         <div class="flex items-center gap-3">
           <i data-lucide="badge-check" class="w-5 h-5 text-blue-200"></i>
           <span class="font-medium text-sm text-blue-50">ID Pegawai</span>
         </div>
-        <span class="font-bold tracking-widest text-white" id="employee-id-text">------</span>
+        <div class="flex flex-col items-end">
+          <span class="font-bold tracking-widest text-white" id="employee-id-text">------</span>
+          <span id="shift-text"
+            class="text-[9px] font-extrabold uppercase bg-white/20 px-2 py-0.5 rounded-md mt-1 border border-white/10 text-blue-100">
+            Shift Siang
+          </span>
+        </div>
       </div>
     </header>
 
@@ -67,13 +74,55 @@
         <div class="skeleton h-48 w-full rounded-[2.25rem] mb-4"></div>
 
         <!-- Small Modules Skeleton -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="skeleton h-28 rounded-2xl"></div>
-          <div class="skeleton h-28 rounded-2xl"></div>
+        <div class="grid grid-cols-4 gap-4">
+          <div class="flex flex-col items-center">
+            <div class="skeleton w-12 h-12 rounded-2xl mb-2"></div>
+            <div class="skeleton h-2 w-10"></div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="skeleton w-12 h-12 rounded-2xl mb-2"></div>
+            <div class="skeleton h-2 w-10"></div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="skeleton w-12 h-12 rounded-2xl mb-2"></div>
+            <div class="skeleton h-2 w-10"></div>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="skeleton w-12 h-12 rounded-2xl mb-2"></div>
+            <div class="skeleton h-2 w-10"></div>
+          </div>
         </div>
       </div>
 
       <div id="dashboard-content" class="hidden space-y-4 fade-in">
+
+        <!-- Quick Menu Grid -->
+        <div class="grid grid-cols-4 gap-4 px-1">
+          <a href="payroll.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="wallet" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Payroll</span>
+          </a>
+          <a href="leave.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="calendar-heart" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Cuti</span>
+          </a>
+          <a href="permission.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="user-check" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Izin</span>
+          </a>
+          <a href="overtime.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="timer" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Lembur</span>
+          </a>
+        </div>
 
         <!-- Attendance Today - iOS Digital Punch Card -->
         <div class="punch-card-minimal">
@@ -165,7 +214,7 @@
           <!-- Monthly Attendance Chart Widget -->
           <div class="card p-4 flex flex-col items-center">
             <h3 class="font-bold text-slate-800 text-sm mb-4 self-start flex items-center gap-2">
-              <i data-lucide="calendar-days" class="w-4 h-4 text-emerald-500"></i> B. Ini
+              <i data-lucide="calendar-days" class="w-4 h-4 text-emerald-500"></i> Kehadiran
             </h3>
             <div class="relative w-28 h-28 flex items-center justify-center">
               <canvas id="attendanceDonutChart"></canvas>

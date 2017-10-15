@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NATRA - Lembur</title>
+  <link rel="stylesheet" href="../src/styles/tailwind.css">
+  <script src="../src/core/theme/theme-init.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 pb-12">
+  <div class="app-wrap">
+    
+    <!-- Top Header - Matching Style -->
+    <header class="module-header bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-700 sticky top-0 z-[100]">
+      <div class="module-header-row flex items-center gap-4 px-5 h-16">
+        <button onclick="window.history.back()" class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
+          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+        <h1 class="text-lg font-bold text-slate-800 dark:text-white">Lembur</h1>
+        <div class="ml-auto">
+          <div class="flex items-center gap-2 px-3 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full">
+            <i data-lucide="zap" class="w-3.5 h-3.5 animate-pulse"></i>
+            <span class="text-[10px] font-extrabold uppercase tracking-widest">Aktif</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="px-5 py-6 space-y-8">
+      
+      <!-- Overtime Stats Card -->
+      <div class="card bg-slate-900 dark:bg-slate-800 text-white p-6 rounded-[2.5rem] shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+        <div class="relative z-10 flex justify-between items-center">
+          <div>
+            <p class="text-indigo-300 text-[10px] font-extrabold uppercase tracking-[0.2em] mb-1">Total Bulan Ini</p>
+            <div class="flex items-baseline gap-1">
+              <h2 class="text-4xl font-extrabold tracking-tighter">24.5</h2>
+              <span class="text-xs font-bold text-indigo-300">Jam</span>
+            </div>
+            <p class="mt-4 text-[11px] font-medium text-white/60 leading-relaxed">Estimasi insentif lembur Anda: <span class="text-emerald-400 font-extrabold">Rp 1.150.000</span></p>
+          </div>
+          <div class="w-16 h-16 rounded-3xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/10">
+            <i data-lucide="trending-up" class="w-8 h-8 text-indigo-300"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action: Overtime Submission -->
+      <section class="space-y-4">
+        <h3 class="px-5 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Lapor Lembur Baru</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] p-7 shadow-sm border border-slate-100 dark:border-slate-700 space-y-5">
+          
+          <div class="space-y-2">
+            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Nama Tugas / Pekerjaan</label>
+            <input type="text" placeholder="Contoh: Audit Stok Gudang A" 
+              class="w-full bg-slate-50 dark:bg-slate-700/50 border-none rounded-2xl px-4 py-4 text-sm font-bold text-slate-800 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-primary-500/20">
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Mulai</label>
+              <input type="time" class="w-full bg-slate-50 dark:bg-slate-700/50 border-none rounded-2xl px-4 py-4 text-sm font-bold text-slate-800 dark:text-white focus:ring-2 focus:ring-primary-500/20">
+            </div>
+            <div class="space-y-2">
+              <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Selesai</label>
+              <input type="time" class="w-full bg-slate-50 dark:bg-slate-700/50 border-none rounded-2xl px-4 py-4 text-sm font-bold text-slate-800 dark:text-white focus:ring-2 focus:ring-primary-500/20">
+            </div>
+          </div>
+
+          <button id="btn-request-overtime" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-[1.5rem] py-5 flex items-center justify-center gap-3 active:scale-95 transition-all shadow-lg shadow-indigo-500/20 mt-2 group">
+            <i data-lucide="plus" class="w-5 h-5 group-hover:rotate-90 transition-transform"></i>
+            <span class="font-extrabold">Ajukan Lembur</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Comparison / History -->
+      <section class="space-y-4 pb-4">
+        <h3 class="px-5 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Minggu Ini</h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between p-5 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-2xl bg-slate-50 dark:bg-slate-700 flex flex-col items-center justify-center">
+                <span class="text-[10px] font-bold text-slate-800 dark:text-white">12</span>
+                <span class="text-[8px] font-bold text-slate-400">Apr</span>
+              </div>
+              <div>
+                <p class="text-sm font-extrabold text-slate-800 dark:text-slate-200">Deployment Proyek X</p>
+                <p class="text-[10px] text-slate-400 font-medium">18:00 - 22:00 • 4 Jam</p>
+              </div>
+            </div>
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="../src/features/overtime/overtime.controller.js"></script>
+</body>
+</html>

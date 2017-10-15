@@ -30,9 +30,23 @@ const DashboardController = {
     setText('greeting-text', greeting);
     setText('user-name', name);
     setText('employee-id-text', employee?.employee_id || '-');
+    setText('shift-text', employee?.shift || 'Shift Siang'); // Dummy shift data
 
     const avatarEl = document.getElementById('user-avatar');
-    if (avatarEl) avatarEl.textContent = getInitials(name);
+    const avatarImg = document.getElementById('user-avatar-img');
+    const avatarText = document.getElementById('user-avatar-text');
+
+    if (avatarEl) {
+      // Use premium dummy image (iOS 18 style)
+      const dummyImageUrl = `https://i.pravatar.cc/150?u=${employee?.employee_id || 'natra'}`;
+      if (avatarImg) {
+        avatarImg.src = dummyImageUrl;
+        avatarImg.classList.remove('hidden');
+      }
+      if (avatarText) {
+        avatarText.classList.add('hidden');
+      }
+    }
   },
 
   _attendanceChart: null,

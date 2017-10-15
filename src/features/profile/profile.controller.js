@@ -16,15 +16,39 @@ const ProfileController = {
   },
 
   async _loadProfile() {
+    const headerSkeleton = document.getElementById('profile-skeleton-header');
+    const headerContent = document.getElementById('profile-header-content');
+    const infoSkeleton = document.getElementById('profile-info-loading');
+    const infoContent = document.getElementById('profile-info-content');
+
+    if (headerSkeleton) headerSkeleton.classList.remove('hidden');
+    if (headerContent) headerContent.classList.add('hidden');
+    if (infoSkeleton) infoSkeleton.classList.remove('hidden');
+    if (infoContent) infoContent.classList.add('hidden');
+
     try {
       const data = await ProfileService.getProfile();
       this._renderProfile(data);
+
+      setTimeout(() => {
+        if (headerSkeleton) headerSkeleton.classList.add('hidden');
+        if (headerContent) headerContent.classList.remove('hidden');
+        if (infoSkeleton) infoSkeleton.classList.add('hidden');
+        if (infoContent) infoContent.classList.remove('hidden');
+      }, 800);
     } catch (err) {
       // Fallback to stored data
       const user = Auth.getUser();
       const employee = Auth.getEmployee();
-      if (user) this._renderProfile({ ...user, employee });
-      else showToast('Gagal memuat profil', 'error');
+      if (user) {
+        this._renderProfile({ ...user, employee });
+        if (headerSkeleton) headerSkeleton.classList.add('hidden');
+        if (headerContent) headerContent.classList.remove('hidden');
+        if (infoSkeleton) infoSkeleton.classList.add('hidden');
+        if (infoContent) infoContent.classList.remove('hidden');
+      } else {
+        showToast('Gagal memuat profil', 'error');
+      }
     }
   },
 
@@ -97,6 +121,52 @@ const ProfileController = {
       closePrivBtn.addEventListener('click', closePriv);
       privOverlay.addEventListener('click', (e) => {
         if (e.target === privOverlay) closePriv();
+      });
+    }
+
+    // --- Policy Modal Logic ---
+    const policyOverlay = document.getElementById('policy-modal-overlay');
+    const openPolicyBtn = document.getElementById('btn-open-policy-modal');
+    const closePolicyBtn = document.getElementById('btn-close-policy-modal');
+
+    if (openPolicyBtn && policyOverlay) {
+      openPolicyBtn.addEventListener('click', () => {
+        policyOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    if (closePolicyBtn && policyOverlay) {
+      const closePolicy = () => {
+        policyOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      };
+      closePolicyBtn.addEventListener('click', closePolicy);
+      policyOverlay.addEventListener('click', (e) => {
+        if (e.target === policyOverlay) closePolicy();
+      });
+    }
+
+    // --- Info Modal Logic ---
+    const infoOverlay = document.getElementById('info-modal-overlay');
+    const openInfoBtn = document.getElementById('btn-open-info-modal');
+    const closeInfoBtn = document.getElementById('btn-close-info-modal');
+
+    if (openInfoBtn && infoOverlay) {
+      openInfoBtn.addEventListener('click', () => {
+        infoOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+
+    if (closeInfoBtn && infoOverlay) {
+      const closeInfo = () => {
+        infoOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      };
+      closeInfoBtn.addEventListener('click', closeInfo);
+      infoOverlay.addEventListener('click', (e) => {
+        if (e.target === infoOverlay) closeInfo();
       });
     }
 

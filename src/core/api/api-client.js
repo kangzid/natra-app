@@ -88,12 +88,7 @@ async function request(endpoint, options = {}) {
 
     // Network / CORS / connection error — err.message is the raw browser message
     // e.g. "Failed to fetch" (Chrome) or "NetworkError when attempting to fetch resource" (Firefox)
-    const isCors = err.message?.toLowerCase().includes('fetch') || err.message?.toLowerCase().includes('network');
-    const hint = isCors
-      ? `Pastikan backend Laravel berjalan di ${BASE_URL} dan CORS sudah dikonfigurasi untuk http://localhost:3000.`
-      : 'Periksa koneksi Anda.';
-
-    const networkError = new Error(`Tidak dapat terhubung ke server. ${hint}`);
+    const networkError = new Error('Terjadi gangguan koneksi ke server. Silakan coba lagi nanti atau hubungi administrator jika masalah berlanjut.');
     networkError.status = 0;
     networkError.data = null;
     throw networkError;

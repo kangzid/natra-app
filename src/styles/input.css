@@ -83,3 +83,42 @@
   width: 0px;
   background: transparent;
 }
+/* Hide browser default password eye icon */
+input::-ms-reveal,
+input::-ms-clear,
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
+
+/* Hide search cancel button in some browsers */
+input::-webkit-search-cancel-button {
+  display: none;
+}
+@layer utilities {
+  .skeleton {
+    @apply bg-slate-200 dark:bg-slate-700 animate-pulse-slow rounded;
+  }
+  
+  .skeleton-text {
+    @apply h-4 bg-slate-200 dark:bg-slate-700 animate-pulse-slow rounded w-full;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

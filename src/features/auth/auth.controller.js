@@ -24,7 +24,7 @@ const AuthController = {
     }
 
     // Toggle password visibility
-    const toggleBtn = document.getElementById('toggle-password');
+    const toggleBtn = document.getElementById('toggle-pwd');
     const passwordInput = document.getElementById('password');
     if (toggleBtn && passwordInput) {
       toggleBtn.addEventListener('click', () => {
