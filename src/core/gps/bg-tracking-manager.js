@@ -6,6 +6,7 @@
 import { GpsService } from '../../features/gps/gps.service.js';
 import { TasksService } from '../../features/tasks/tasks.service.js';
 import { Storage } from '../storage/storage.js';
+import { Auth } from '../auth/auth.js';
 
 // Safe plugin access (works in both browser and native)
 const getPlugins = () => window.Capacitor?.Plugins || {};
@@ -42,15 +43,20 @@ export const BgTrackingManager = {
           backgroundTitle: 'Fitur Pelacakan Berjalan',
           requestPermissions: true,
           stale: false,
-          distanceFilter: 10, // Update every 10 meters
+          distanceFilter: 0,   // Max sensitivity (update even if tiny movement)
+          interval: 60000,     // 60s
+          fastestInterval: 30000, // 30s
         },
         async (location, error) => {
           if (error) {
             console.error('[BgTracking] Geolocation Error:', error);
+            this.saveSyncStatus('error', error.message || 'GPS Error');
             return;
           }
 
           if (location) {
+            // Map plugin bearing to heading for GpsService consistency
+            location.heading = location.bearing;
             await this._onLocationUpdate(location);
           }
         }
@@ -58,9 +64,11 @@ export const BgTrackingManager = {
       }
 
       console.log('[BgTracking] Started with ID:', watcherId);
-      this._updatePersistentNotification(); // Initial update
+      this.saveSyncStatus('active', 'Memulai pelacakan...');
+      this._updatePersistentNotification(); 
     } catch (err) {
       console.error('[BgTracking] Failed to start:', err);
+      this.saveSyncStatus('error', err.message);
       throw err;
     }
   },
@@ -73,6 +81,7 @@ export const BgTrackingManager = {
       await BackgroundGeolocation.removeWatcher({ id: watcherId });
       watcherId = null;
     }
+    this.saveSyncStatus('inactive', 'Pelacakan dimatikan');
     console.log('[BgTracking] Stopped');
   },
 
@@ -80,16 +89,21 @@ export const BgTrackingManager = {
    * Handle location update and check for tasks
    */
   async _onLocationUpdate(location) {
-    const employee = Storage.getUser();
-    if (!employee) return;
+    const employeeId = Auth.getEmployeeNumericId();
+    if (!employeeId) {
+      console.warn('[BgTracking] No valid employee ID found');
+      return;
+    }
 
     // A. Update Location to Server
     try {
-      await GpsService.updateLocation(location, employee.id);
+      await GpsService.updateLocation(location, employeeId);
       this._updatePersistentNotification('GPS Aktif & Sinkron');
+      this.saveSyncStatus('success', 'Lokasi berhasil terkirim');
     } catch (e) {
       console.warn('[BgTracking] Location Sync Failed:', e);
       this._updatePersistentNotification('GPS Aktif - Offline');
+      this.saveSyncStatus('warning', `Koneksi gagal: ${e.message}`);
     }
 
     // B. Periodic Task Check (Every 5 mins)
@@ -136,14 +150,26 @@ export const BgTrackingManager = {
   },
 
   /**
-   * Update the persistent notification text
+   * Helper to save sync status for Dashboard display
+   */
+  saveSyncStatus(status, message) {
+    const syncData = {
+      status, // 'success' | 'error' | 'warning' | 'active'
+      message,
+      time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+    };
+    localStorage.setItem('natra_bg_sync_status', JSON.stringify(syncData));
+    
+    // Dispatch event to notify Dashboard if it's open
+    window.dispatchEvent(new CustomEvent('natra-sync-update', { detail: syncData }));
+  },
+
+  /**
+   * Update the persistent notification text (Native only)
    */
   _updatePersistentNotification(status = 'GPS Aktif') {
     const elapsedMinutes = Math.floor((Date.now() - startTime) / 60000);
-    // Note: The plugin automatically updates the notification if we re-configure, 
-    // but the backgroundMessage/Title are usually set at start.
-    // Periodic UI updates in background on Android are tricky; 
-    // for now we focus on the core requirement.
+    // console.log logic remains for dev
     console.log(`[BgTracking] Status: ${status}, Time: ${elapsedMinutes}m`);
   }
 };

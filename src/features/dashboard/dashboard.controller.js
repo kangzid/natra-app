@@ -8,13 +8,27 @@ import { GpsController } from '../gps/gps.controller.js';
 import { Storage } from '../../core/storage/storage.js';
 import { AttendanceService } from '../attendance/attendance.service.js';
 import { NotificationService } from '../notification/notification.service.js';
-import { showToast, setText, formatTime, getInitials } from '../../utils/ui-helpers.js';
+import { showToast, setText, formatTime, getInitials, initPullToRefresh } from '../../utils/ui-helpers.js';
+import { Cache } from '../../utils/cache.js';
 
 const DashboardController = {
   async init() {
     if (!Auth.requireAuth()) return;
 
     this._renderHeader();
+    
+    // SWR Pattern: Load from cache first
+    const cachedData = Cache.get('dashboard');
+    if (cachedData) {
+      this._renderDashboard(cachedData);
+      this._renderAttendanceChart(cachedData.monthly_attendance);
+      // Show content immediately
+      const contentEl = document.getElementById('dashboard-content');
+      const loadingEl = document.getElementById('dashboard-loading');
+      if (contentEl) contentEl.classList.remove('hidden');
+      if (loadingEl) loadingEl.classList.add('hidden');
+    }
+
     await this._loadDashboard();
     this._bindEvents();
     this._restoreTracking();
@@ -37,10 +51,10 @@ const DashboardController = {
     const avatarText = document.getElementById('user-avatar-text');
 
     if (avatarEl) {
-      // Use premium dummy image (iOS 18 style)
-      const dummyImageUrl = `https://i.pravatar.cc/150?u=${employee?.employee_id || 'natra'}`;
+      // Use local employee profile image
+      const profileImageUrl = '../src/img/profile-employee.png';
       if (avatarImg) {
-        avatarImg.src = dummyImageUrl;
+        avatarImg.src = profileImageUrl;
         avatarImg.classList.remove('hidden');
       }
       if (avatarText) {
@@ -54,8 +68,11 @@ const DashboardController = {
   async _loadDashboard() {
     const loadingEl = document.getElementById('dashboard-loading');
     const contentEl = document.getElementById('dashboard-content');
-    if (loadingEl) loadingEl.classList.remove('hidden');
-    if (contentEl) contentEl.classList.add('hidden');
+    
+    // Only show skeleton if NO cache exists
+    const hasCache = !!Cache.get('dashboard');
+    if (loadingEl && !hasCache) loadingEl.classList.remove('hidden');
+    if (contentEl && !hasCache) contentEl.classList.add('hidden');
 
     try {
       // Fetch concurrently
@@ -80,6 +97,9 @@ const DashboardController = {
       // Map unread notifications
       data.unread_notifications = notifRes?.count ?? (Array.isArray(notifRes) ? notifRes.length : (Array.isArray(notifRes?.data) ? notifRes.data.length : 0));
 
+      // Save to cache for next time
+      Cache.set('dashboard', data, 3); // Cache for 3 mins
+
       this._renderDashboard(data);
       
       // Small delay to ensure DOM is ready for animation & chart
@@ -96,7 +116,10 @@ const DashboardController = {
 
     } catch (err) {
       console.error('Dashboard Error:', err);
-      showToast(err.message || 'Gagal memuat dashboard', 'error');
+      // Only show toast if we have no cached data (fresh load failed)
+      if (!Cache.get('dashboard')) {
+        showToast(err.message || 'Gagal memuat dashboard', 'error');
+      }
       if (loadingEl) loadingEl.classList.add('hidden');
     }
   },
@@ -230,12 +253,52 @@ const DashboardController = {
     if (refreshBtn) {
       refreshBtn.addEventListener('click', () => this._loadDashboard());
     }
+
+    // Pull to Refresh
+    initPullToRefresh('main-content', () => this._loadDashboard());
   },
 
   _restoreTracking() {
     // Resume tracking if it was active before
     if (Storage.isTrackingActive()) {
       GpsController.startTracking();
+    }
+    
+    // Initial sync status load
+    this._updateSyncUI(JSON.parse(localStorage.getItem('natra_bg_sync_status') || 'null'));
+
+    // Listen for real-time background updates
+    window.addEventListener('natra-sync-update', (e) => {
+      this._updateSyncUI(e.detail);
+    });
+  },
+
+  _updateSyncUI(syncData) {
+    const bar = document.getElementById('sync-status-bar');
+    const dot = document.getElementById('sync-status-dot');
+    const msg = document.getElementById('sync-status-msg');
+    const time = document.getElementById('sync-status-time');
+
+    if (!bar || !syncData) return;
+
+    bar.classList.remove('hidden');
+
+    // Color mapping
+    const colors = {
+      success: 'bg-emerald-500',
+      error: 'bg-red-500',
+      warning: 'bg-amber-500',
+      active: 'bg-blue-500',
+      inactive: 'bg-slate-300'
+    };
+
+    dot.className = `w-2 h-2 rounded-full ${colors[syncData.status] || 'bg-slate-300'} ${syncData.status === 'active' ? 'animate-pulse' : ''}`;
+    msg.textContent = syncData.message;
+    time.textContent = syncData.time;
+
+    // Auto-hide if inactive
+    if (syncData.status === 'inactive') {
+      setTimeout(() => bar.classList.add('hidden'), 3000);
     }
   },
 };

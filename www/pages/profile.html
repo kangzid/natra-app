@@ -13,21 +13,30 @@
 
 <body class="bg-slate-50 relative">
 
-  <div class="app-wrap pb-32">
+  <div class="app-wrap pb-32 relative z-20">
 
     <!-- Top Header Profile - iOS Style -->
-    <header class="bg-white px-6 pt-12 pb-8 flex flex-col items-center border-b border-slate-100">
-      <div id="profile-avatar"
-        class="w-24 h-24 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center text-3xl font-extrabold border-4 border-white ring-1 ring-primary-100 mb-4 shadow-sm">
-        --
+    <header class="bg-white dark:bg-slate-800 px-6 pt-12 pb-8 flex flex-col items-center border-b border-slate-100 dark:border-slate-700 relative z-10">
+      <div id="profile-skeleton-header" class="w-full flex flex-col items-center">
+        <div class="w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-full animate-pulse mb-4"></div>
+        <div class="h-6 w-40 bg-slate-100 dark:bg-slate-700 rounded animate-pulse mb-2"></div>
+        <div class="h-3 w-24 bg-slate-100 dark:bg-slate-700 rounded animate-pulse"></div>
       </div>
-      <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight" id="profile-name">Memuat...</h1>
-      <p class="text-slate-400 text-sm font-bold mt-1 uppercase tracking-widest" id="profile-id">ID: ------</p>
 
-      <div class="mt-4">
-        <span id="profile-status" class="px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider">
-          ---
-        </span>
+      <div id="profile-header-content" class="flex flex-col items-center hidden">
+        <div id="profile-avatar"
+          class="w-24 h-24 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center text-3xl font-extrabold border-4 border-white ring-1 ring-primary-100 mb-4 shadow-sm overflow-hidden">
+          <img src="../src/img/profile-employee.png" id="profile-avatar-img" class="w-full h-full object-cover" alt="Profile">
+          <span id="profile-avatar-text" class="hidden">--</span>
+        </div>
+        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight" id="profile-name">Memuat...</h1>
+        <p class="text-slate-400 text-sm font-bold mt-1 uppercase tracking-widest" id="profile-id">ID: ------</p>
+  
+        <div class="mt-4">
+          <span id="profile-status" class="px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider">
+            ---
+          </span>
+        </div>
       </div>
     </header>
 
@@ -35,14 +44,31 @@
 
       <!-- Account Info Group -->
       <h3 class="px-4 mb-2 text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">Informasi Akun</h3>
-      <div class="ios-settings-group mb-8">
+      <div id="profile-info-loading" class="ios-settings-group mb-8">
+        <div class="ios-settings-row">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 animate-pulse"></div>
+          <div class="flex-1 ml-3">
+            <div class="h-2 w-10 bg-slate-50 rounded mb-2"></div>
+            <div class="h-4 w-32 bg-slate-100 rounded"></div>
+          </div>
+        </div>
+        <div class="ios-settings-row">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 animate-pulse"></div>
+          <div class="flex-1 ml-3">
+            <div class="h-2 w-10 bg-slate-50 rounded mb-2"></div>
+            <div class="h-4 w-32 bg-slate-100 rounded"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="profile-info-content" class="ios-settings-group mb-8 hidden">
         <div class="ios-settings-row">
           <div class="ios-settings-icon bg-blue-50 text-blue-500">
             <i data-lucide="mail" class="w-5 h-5"></i>
           </div>
           <div class="flex-1">
             <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Email</p>
-            <p class="text-sm font-extrabold text-slate-800" id="profile-email">---</p>
+            <p class="text-sm font-extrabold text-slate-800 dark:text-slate-200" id="profile-email">---</p>
           </div>
         </div>
 
@@ -52,7 +78,7 @@
           </div>
           <div class="flex-1">
             <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Departemen</p>
-            <p class="text-sm font-extrabold text-slate-800" id="profile-department">---</p>
+            <p class="text-sm font-extrabold text-slate-800 dark:text-slate-200" id="profile-department">---</p>
           </div>
         </div>
 
@@ -62,7 +88,7 @@
           </div>
           <div class="flex-1">
             <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Posisi</p>
-            <p class="text-sm font-extrabold text-slate-800" id="profile-position">---</p>
+            <p class="text-sm font-extrabold text-slate-800 dark:text-slate-200" id="profile-position">---</p>
           </div>
         </div>
       </div>
@@ -112,6 +138,25 @@
             <i data-lucide="shield-check" class="w-5 h-5"></i>
           </div>
           <div class="flex-1 text-sm font-extrabold text-slate-800">Kebijakan Privasi</div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300"></i>
+        </div>
+
+        <div class="ios-settings-row cursor-pointer" id="btn-open-policy-modal">
+          <div class="ios-settings-icon bg-slate-100 text-slate-600">
+            <i data-lucide="file-text" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1 text-sm font-extrabold text-slate-800">Peraturan Perusahaan</div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300"></i>
+        </div>
+
+        <div class="ios-settings-row cursor-pointer" id="btn-open-info-modal">
+          <div class="ios-settings-icon bg-slate-100 text-slate-600">
+            <i data-lucide="info" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-extrabold text-slate-800">Info Aplikasi</p>
+            <p class="text-[10px] font-bold text-slate-400">Versi 1.2.0 (Stable)</p>
+          </div>
           <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300"></i>
         </div>
       </div>
@@ -185,6 +230,82 @@
       </div>
     </div>
 
+    <!-- iOS Bottom Sheet Modal for Company Policy -->
+    <div id="policy-modal-overlay" class="ios-modal-overlay">
+      <div class="ios-bottom-sheet">
+        <div class="ios-sheet-handle"></div>
+
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-2xl font-extrabold text-slate-900">Peraturan Perusahaan</h2>
+          <button id="btn-close-policy-modal"
+            class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="space-y-6 pb-6 overflow-y-auto max-h-[70vh] pr-2 custom-scrollbar">
+          <section>
+            <h4 class="text-[11px] font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-3">1. Jam Kerja & Kehadiran</h4>
+            <div class="bg-slate-50/50 rounded-2xl p-4 border border-slate-100/50 space-y-4">
+              <div class="flex gap-3">
+                <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+                <div>
+                  <p class="text-[13px] font-extrabold text-slate-900">Jam Operasional</p>
+                  <p class="text-[12px] font-medium text-slate-500 leading-relaxed">Senin - Jumat: 08.00 - 17.00 WIB. Hari Sabtu menyesuaikan jadwal shift yang telah ditentukan.</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <i data-lucide="timer" class="w-4 h-4 text-slate-400"></i>
+                <div>
+                  <p class="text-[13px] font-extrabold text-slate-900">Toleransi & Keterlambatan</p>
+                  <p class="text-[12px] font-medium text-slate-500 leading-relaxed">Batas toleransi keterlambatan adalah 15 menit. Lebih dari itu wajib memberikan konfirmasi kepada atasan.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h4 class="text-[11px] font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-3">2. Prosedur Absensi Digital</h4>
+            <p class="text-[13px] text-slate-600 leading-relaxed font-medium mb-3">Setiap karyawan wajib melakukan pencatatan kehadiran mandiri melalui aplikasi NATRA Mobile dengan ketentuan:</p>
+            <ul class="space-y-2">
+              <li class="flex gap-3 items-start">
+                <div class="w-5 h-5 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">A</div>
+                <p class="text-[12px] text-slate-600 font-medium leading-relaxed"><b>Check-in</b> dilakukan saat tiba di area kerja dalam radius yang ditentukan.</p>
+              </li>
+              <li class="flex gap-3 items-start">
+                <div class="w-5 h-5 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">B</div>
+                <p class="text-[12px] text-slate-600 font-medium leading-relaxed"><b>Check-out</b> dilakukan setelah jam kerja berakhir atau tugas selesai.</p>
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h4 class="text-[11px] font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-3">3. Kode Etik & Profesionalisme</h4>
+            <div class="grid grid-cols-1 gap-3">
+              <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <i data-lucide="user-check" class="w-4 h-4 text-emerald-500"></i>
+                <p class="text-[12px] font-bold text-slate-700">Menjaga Integritas Data</p>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-amber-500"></i>
+                <p class="text-[12px] font-bold text-slate-700">Kerahasiaan Informasi Perusahaan</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-primary-600 rounded-2xl p-5 text-white">
+            <h4 class="text-[11px] font-extrabold text-white/70 uppercase tracking-[0.2em] mb-2">Penting</h4>
+            <p class="text-[13px] font-medium leading-relaxed">Pelanggaran terhadap peraturan yang tercantum dapat dikenakan sanksi administratif sesuai dengan ketentuan Perjanjian Kerja yang berlaku.</p>
+          </section>
+
+          <div class="pt-6 border-t border-slate-100 text-center">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Update Terakhir: Januari 2026</p>
+            <p class="text-[10px] font-bold text-slate-300 mt-1">Departemen Sumber Daya Manusia (HRD)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- iOS Bottom Sheet Modal for Privacy Policy -->
     <div id="privacy-modal-overlay" class="ios-modal-overlay">
       <div class="ios-bottom-sheet">
@@ -198,34 +319,193 @@
           </button>
         </div>
 
-        <div class="space-y-8 pb-4">
+        <div class="space-y-6 pb-4 overflow-y-auto max-h-[70vh] pr-2 custom-scrollbar">
+          <p class="text-[13px] text-slate-600 leading-relaxed font-medium">
+            NATRA — <i>Enterprise HRIS & Real-time Tracking Solution</i> berkomitmen untuk melindungi dan menjaga kerahasiaan data pengguna. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi dalam sistem untuk mendukung operasional bisnis secara aman, transparan, dan efisien.
+          </p>
+
           <section>
-            <h4 class="text-xs font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-3">Data Collection</h4>
-            <p class="text-[14px] text-slate-600 leading-relaxed font-medium">NATRA collects professional data including
-              names, emails, and real-time location coordinates to facilitate business operations and employee safety.
+            <h4 class="text-[11px] font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-2">Pengumpulan Data</h4>
+            <p class="text-[13px] text-slate-600 leading-relaxed font-medium">
+              NATRA mengumpulkan data profesional seperti nama, alamat email, data kehadiran, serta koordinat lokasi (GPS) secara real-time saat fitur pelacakan digunakan untuk kepentingan operasional sistem.
             </p>
           </section>
 
           <section>
-            <h4 class="text-xs font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-3">Location Tracking
-              Transparency</h4>
-            <p class="text-[14px] text-slate-600 leading-relaxed font-medium">Location data is only recorded during
-              active duty or when a specific duty-related check-in is performed. We respect employee privacy outside of
-              working hours.</p>
+            <h4 class="text-[11px] font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-2">Transparansi Pelacakan</h4>
+            <ul class="space-y-1.5">
+              <li class="flex gap-2 text-[13px] text-slate-600 font-medium">
+                <span class="text-primary-500">•</span>
+                <span>Hanya dilakukan saat jam kerja aktif atau menjalankan tugas.</span>
+              </li>
+              <li class="flex gap-2 text-[13px] text-slate-600 font-medium">
+                <span class="text-primary-500">•</span>
+                <span>Tidak ada pelacakan lokasi di luar jam kerja.</span>
+              </li>
+              <li class="flex gap-2 text-[13px] text-slate-600 font-medium">
+                <span class="text-primary-500">•</span>
+                <span>Data digunakan untuk operasional dan keselamatan kerja.</span>
+              </li>
+            </ul>
           </section>
 
           <section>
-            <h4 class="text-xs font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-3">Data Security & Storage
-            </h4>
-            <p class="text-[14px] text-slate-600 leading-relaxed font-medium">All data is encrypted and stored within
-              your tenant isolation zone. Admins are responsible for ensuring that recaps are done before performing
-              system cleanups.</p>
+            <h4 class="text-[11px] font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-2">Penggunaan Data</h4>
+            <p class="text-[13px] text-slate-600 leading-relaxed font-medium mb-2">Data digunakan untuk tujuan operasional penting:</p>
+            <ul class="grid grid-cols-1 gap-1.5">
+              <li class="flex items-center gap-2 text-[12px] text-slate-500 font-bold bg-slate-50 p-2 rounded-lg border border-slate-100">
+                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> Validasi kehadiran & absensi
+              </li>
+              <li class="flex items-center gap-2 text-[12px] text-slate-500 font-bold bg-slate-50 p-2 rounded-lg border border-slate-100">
+                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> Pengelolaan tugas & kinerja
+              </li>
+              <li class="flex items-center gap-2 text-[12px] text-slate-500 font-bold bg-slate-50 p-2 rounded-lg border border-slate-100">
+                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> Efisiensi operasional real-time
+              </li>
+            </ul>
           </section>
 
-          <div class="pt-6 border-t border-slate-100 flex flex-col items-center">
-            <img src="../src/img/natra-logo.png" alt="NATRA Logo" class="w-24 h-24 object-contain mb-3">
-            <p class="text-xs font-extrabold text-slate-900">NATRA Enterprise Solutions</p>
-            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">Last updated: April 2026</p>
+          <section>
+            <h4 class="text-[11px] font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-2">Keamanan & Penyimpanan</h4>
+            <p class="text-[13px] text-slate-600 leading-relaxed font-medium">
+              Kami menerapkan enkripsi data, arsitektur multi-tenant dengan isolasi ketat, serta pembatasan akses berdasarkan peran untuk menjaga integritas informasi Anda.
+            </p>
+          </section>
+
+          <section>
+            <h4 class="text-[11px] font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-2">Retensi Data</h4>
+            <p class="text-[13px] text-slate-600 leading-relaxed font-medium">
+              Data disimpan selama diperlukan organisasi. Pengelolaan retensi dan rekapitulasi data merupakan tanggung jawab masing-masing tenant (organisasi).
+            </p>
+          </section>
+
+          <section>
+            <h4 class="text-[11px] font-extrabold text-primary-600 uppercase tracking-[0.2em] mb-2">Tanggung Jawab Pengguna</h4>
+            <p class="text-[13px] text-slate-600 leading-relaxed font-medium">
+              Administrator mengelola kebijakan internal, sementara pengguna wajib menggunakan sistem secara bijak sesuai tujuan operasional perusahaan.
+            </p>
+          </section>
+
+          <div class="pt-8 border-t border-slate-100">
+            <div class="flex flex-col items-center mb-6">
+              <img src="../src/img/natra-logo.png" alt="NATRA" class="w-32 object-contain opacity-50 mb-1">
+              <p class="text-[10px] font-bold text-slate-300 uppercase tracking-[0.3em]">Nata Terpadu Rapi Amanah</p>
+            </div>
+
+            <div class="bg-blue-50/50 rounded-2xl p-4 mb-6 border border-blue-100/50">
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-600 flex-shrink-0 shadow-sm">
+                  <i data-lucide="headphones" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <p class="text-[11px] font-extrabold text-slate-800">Pusat Dukungan</p>
+                  <p class="text-[10px] font-medium text-slate-500 leading-relaxed mb-2">Ada pertanyaan tentang privasi Anda? Tim dukungan kami siap membantu.</p>
+                  <a href="mailto:support@natra.id" class="text-[11px] font-extrabold text-blue-600 flex items-center gap-1 hover:underline">
+                    Hubungi Kami <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between py-4 border-t border-slate-50">
+              <div class="flex items-center gap-2">
+                <div class="flex -space-x-1">
+                  <div class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center border border-white">
+                    <i data-lucide="shield-check" class="w-2.5 h-2.5 text-slate-400"></i>
+                  </div>
+                  <div class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center border border-white">
+                    <i data-lucide="lock" class="w-2.5 h-2.5 text-slate-400"></i>
+                  </div>
+                </div>
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Enterprise Secure</span>
+              </div>
+              <div class="text-right">
+                <p class="text-[10px] font-bold text-slate-900">Versi Dokumen: PT-2026.04</p>
+                <p class="text-[9px] font-medium text-slate-300 uppercase tracking-widest">Terbit: 18 April 2026</p>
+              </div>
+            </div>
+
+            <p class="text-center text-[9px] font-bold text-slate-300 mt-4">
+              © 2026 NATRA Enterprise Solutions. Seluruh Hak Cipta Dilindungi.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- iOS Bottom Sheet Modal for App Info -->
+    <div id="info-modal-overlay" class="ios-modal-overlay">
+      <div class="ios-bottom-sheet">
+        <div class="ios-sheet-handle"></div>
+
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-extrabold text-slate-900">Info Aplikasi</h2>
+          <button id="btn-close-info-modal"
+            class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="space-y-6">
+          <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-slate-100">
+              <img src="../src/img/natra-logo.png" alt="NATRA" class="w-12 object-contain">
+            </div>
+            <div>
+              <h3 class="text-lg font-extrabold text-slate-900">NATRA Mobile</h3>
+              <p class="text-sm font-bold text-slate-500">Versi 1.2.0</p>
+              <p class="text-[10px] font-extrabold text-primary-600 uppercase tracking-widest mt-0.5">Build 20260418.01</p>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-[11px] font-extrabold text-slate-400 uppercase tracking-[0.2em] mb-3 px-1">Apa yang Baru?</h4>
+            <div class="space-y-3">
+              <div class="flex gap-3">
+                <div class="w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 flex flex-shrink-0 items-center justify-center">
+                  <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs font-extrabold text-slate-800">Peningkatan Antarmuka</p>
+                  <p class="text-[10px] font-medium text-slate-500 leading-relaxed">Pengalaman visual yang lebih modern dan transisi yang lebih halus untuk kenyamanan penggunaan.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex flex-shrink-0 items-center justify-center">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs font-extrabold text-slate-800">Stabilitas Konektivitas</p>
+                  <p class="text-[10px] font-medium text-slate-500 leading-relaxed">Peningkatan sistem verifikasi jaringan untuk memastikan akses data yang lebih andal.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <div class="w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 flex flex-shrink-0 items-center justify-center">
+                  <i data-lucide="layout" class="w-3.5 h-3.5"></i>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs font-extrabold text-slate-800">Optimalisasi Performa</p>
+                  <p class="text-[10px] font-medium text-slate-500 leading-relaxed">Penyempurnaan sistem internal untuk respon aplikasi yang lebih cepat dan efisien.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 flex flex-shrink-0 items-center justify-center">
+                  <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs font-extrabold text-slate-800">Penyempurnaan Sistem</p>
+                  <p class="text-[10px] font-medium text-slate-500 leading-relaxed">Peningkatan stabilitas aplikasi dan perbaikan bug minor untuk penggunaan harian.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-slate-100 text-center">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">© 2026 NATRA Enterprise</p>
+            <p class="text-[10px] font-bold text-slate-300 mt-1">Nata Terpadu Rapi Amanah</p>
           </div>
         </div>
       </div>
@@ -275,6 +555,7 @@
   </div>
 
   <script type="module" src="../src/features/profile/profile.controller.js"></script>
+  <script type="module" src="../src/core/nav/nav-manager.js"></script>
   <script>lucide.createIcons();</script>
 </body>
 

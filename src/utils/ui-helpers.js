@@ -127,6 +127,61 @@ export function showConfirm(title, message, options = {}) {
   });
 }
 
+/**
+ * iOS Style Action Sheet (Bottom Menu)
+ */
+export function showActionSheet(actions = [], title = null) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'ios-modal-overlay';
+    
+    let actionsHtml = actions.map((action, index) => `
+      <button class="ios-action-btn ${action.isDestructive ? 'ios-action-btn-danger' : ''}" data-index="${index}">
+        ${action.icon ? `<i data-lucide="${action.icon}" class="w-5 h-5"></i>` : ''}
+        ${action.label}
+      </button>
+    `).join('');
+
+    overlay.innerHTML = `
+      <div class="ios-bottom-sheet">
+        <div class="ios-sheet-handle"></div>
+        ${title ? `<div class="text-center mb-4 text-xs font-bold text-slate-400 uppercase tracking-widest">${title}</div>` : ''}
+        <div class="ios-action-list">
+          ${actionsHtml}
+          <button class="ios-action-btn ios-action-btn-cancel" id="btn-cancel-sheet">Batal</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    if (window.lucide) window.lucide.createIcons({ root: overlay });
+
+    setTimeout(() => overlay.classList.add('active'), 10);
+
+    const close = (result = null) => {
+      overlay.classList.remove('active');
+      setTimeout(() => {
+        overlay.remove();
+        if (result !== null) resolve(result);
+      }, 300);
+    };
+
+    overlay.onclick = (e) => {
+      if (e.target === overlay) close();
+    };
+
+    overlay.querySelector('#btn-cancel-sheet').onclick = () => close();
+
+    overlay.querySelectorAll('.ios-action-btn[data-index]').forEach(btn => {
+      btn.onclick = () => {
+        const index = parseInt(btn.dataset.index);
+        close(index);
+        if (actions[index].onClick) actions[index].onClick();
+      };
+    });
+  });
+}
+
 export function setLoading(btn, loading, loadingText = 'Loading...', originalText = null) {
   if (!btn) return;
   if (loading) {
@@ -240,3 +295,147 @@ export function emptyState(message = 'Tidak ada data', icon = 'layout-list') {
     </div>
   `;
 }
+
+/**
+ * --- Pull to Refresh Logic ---
+ */
+
+/**
+ * Initialize Pull to Refresh on a container
+ * @param {string|HTMLElement} target Container element or ID
+ * @param {Function} onRefresh Callback when refresh is triggered
+ */
+export function initPullToRefresh(target, onRefresh) {
+  const el = typeof target === 'string' ? document.getElementById(target) : target;
+  if (!el) return;
+
+  // Add PTR structure if not exists
+  const ptrId = `ptr-${typeof target === 'string' ? target : 'global'}`;
+  let ptr = document.getElementById(ptrId);
+  
+  if (!ptr) {
+    ptr = document.createElement('div');
+    ptr.id = ptrId;
+    ptr.className = 'ptr-element';
+    ptr.innerHTML = `
+      <div class="ptr-icon">
+        <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+      </div>
+    `;
+    document.body.appendChild(ptr);
+    if (window.lucide) window.lucide.createIcons({ root: ptr });
+  }
+
+  let startY = 0;
+  let currentY = 0;
+  let isPulling = false;
+  const threshold = 80; // Distance to trigger refresh
+
+  el.addEventListener('touchstart', (e) => {
+    // Only pull if we are at the top
+    if (window.scrollY > 0) return;
+    startY = e.touches[0].pageY;
+    ptr.classList.remove('ptr-refreshing');
+    ptr.classList.remove('ptr-transition');
+  }, { passive: true });
+
+  el.addEventListener('touchmove', (e) => {
+    if (window.scrollY > 0) return;
+    
+    currentY = e.touches[0].pageY;
+    const diff = currentY - startY;
+
+    if (diff > 0) {
+      isPulling = true;
+      const pullDistance = Math.min(diff * 0.35, threshold);
+      
+      // Update opacity and icon rotation only
+      // Icon is fixed at top, so it stays put while content moves
+      ptr.style.opacity = Math.min(pullDistance / (threshold * 0.7), 1);
+      
+      const rotate = Math.min(pullDistance * 4, 340);
+      const icon = ptr.querySelector('.ptr-icon');
+      if (icon) icon.style.transform = `rotate(${rotate}deg)`;
+
+      if (pullDistance >= threshold - 10) {
+        ptr.classList.add('ptr-over');
+      } else {
+        ptr.classList.remove('ptr-over');
+      }
+    }
+  }, { passive: true });
+
+  el.addEventListener('touchend', async () => {
+    if (!isPulling) return;
+    isPulling = false;
+    
+    const diff = currentY - startY;
+    
+    if (diff * 0.35 >= threshold - 10) {
+      // Trigger update
+      ptr.classList.add('ptr-refreshing');
+      ptr.classList.add('ptr-transition');
+      ptr.style.opacity = '1';
+      
+      if (onRefresh) await onRefresh();
+      
+      // Reset
+      setTimeout(() => {
+        ptr.classList.remove('ptr-refreshing', 'ptr-over');
+        ptr.style.opacity = '0';
+      }, 500);
+    } else {
+      // Snap back
+      ptr.classList.add('ptr-transition');
+      ptr.style.opacity = '0';
+    }
+  });
+}
+
+// Add CSS for PTR dynamically
+const style = document.createElement('style');
+style.textContent = `
+  .ptr-element {
+    position: fixed;
+    top: 15px; /* Fixed small distance from top */
+    left: 0;
+    right: 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* Lower layer */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .ptr-element.ptr-transition {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+  }
+  .ptr-refreshing, .ptr-over {
+    opacity: 1;
+  }
+  .ptr-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8; /* slate-400 */
+    transition: color 0.3s ease;
+  }
+  .ptr-over .ptr-icon {
+    color: #64748b; /* slate-500 */
+  }
+  .ptr-refreshing .ptr-icon {
+    color: #3b82f6; /* blue-500 */
+  }
+  .ptr-refreshing .ptr-icon i {
+    animation: ptr-spin 0.8s linear infinite;
+  }
+  @keyframes ptr-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+`;
+document.head.appendChild(style);

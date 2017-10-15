@@ -5,12 +5,29 @@
 import { ProfileService } from './profile.service.js';
 import { AuthService } from '../auth/auth.service.js';
 import { Auth } from '../../core/auth/auth.js';
-import { showToast, showConfirm, setLoading, setText, getInitials } from '../../utils/ui-helpers.js';
+import { showToast, showConfirm, setLoading, setText, getInitials, initPullToRefresh } from '../../utils/ui-helpers.js';
 import { ThemeManager } from '../../core/theme/theme-manager.js';
+import { Cache } from '../../utils/cache.js';
 
 const ProfileController = {
   async init() {
     if (!Auth.requireAuth()) return;
+
+    // SWR Pattern: Load from cache
+    const cachedProfile = Cache.get('profile');
+    if (cachedProfile) {
+      this._renderProfile(cachedProfile);
+      // Hide skeletons
+      const headerSkeleton = document.getElementById('profile-skeleton-header');
+      const headerContent = document.getElementById('profile-header-content');
+      const infoSkeleton = document.getElementById('profile-info-loading');
+      const infoContent = document.getElementById('profile-info-content');
+      if (headerSkeleton) headerSkeleton.classList.add('hidden');
+      if (headerContent) headerContent.classList.remove('hidden');
+      if (infoSkeleton) infoSkeleton.classList.add('hidden');
+      if (infoContent) infoContent.classList.remove('hidden');
+    }
+
     await this._loadProfile();
     this._bindEvents();
   },
@@ -21,33 +38,39 @@ const ProfileController = {
     const infoSkeleton = document.getElementById('profile-info-loading');
     const infoContent = document.getElementById('profile-info-content');
 
-    if (headerSkeleton) headerSkeleton.classList.remove('hidden');
-    if (headerContent) headerContent.classList.add('hidden');
-    if (infoSkeleton) infoSkeleton.classList.remove('hidden');
-    if (infoContent) infoContent.classList.add('hidden');
+    // Only show skeleton if NO cache exists
+    const hasCache = !!Cache.get('profile');
+    if (headerSkeleton && !hasCache) headerSkeleton.classList.remove('hidden');
+    if (headerContent && !hasCache) headerContent.classList.add('hidden');
+    if (infoSkeleton && !hasCache) infoSkeleton.classList.remove('hidden');
+    if (infoContent && !hasCache) infoContent.classList.add('hidden');
 
     try {
       const data = await ProfileService.getProfile();
+      
+      // Save to cache (3-min TTL as requested)
+      Cache.set('profile', data, 3);
+
       this._renderProfile(data);
 
-      setTimeout(() => {
-        if (headerSkeleton) headerSkeleton.classList.add('hidden');
-        if (headerContent) headerContent.classList.remove('hidden');
-        if (infoSkeleton) infoSkeleton.classList.add('hidden');
-        if (infoContent) infoContent.classList.remove('hidden');
-      }, 800);
+      if (headerSkeleton) headerSkeleton.classList.add('hidden');
+      if (headerContent) headerContent.classList.remove('hidden');
+      if (infoSkeleton) infoSkeleton.classList.add('hidden');
+      if (infoContent) infoContent.classList.remove('hidden');
     } catch (err) {
       // Fallback to stored data
-      const user = Auth.getUser();
-      const employee = Auth.getEmployee();
-      if (user) {
-        this._renderProfile({ ...user, employee });
-        if (headerSkeleton) headerSkeleton.classList.add('hidden');
-        if (headerContent) headerContent.classList.remove('hidden');
-        if (infoSkeleton) infoSkeleton.classList.add('hidden');
-        if (infoContent) infoContent.classList.remove('hidden');
-      } else {
-        showToast('Gagal memuat profil', 'error');
+      if (!Cache.get('profile')) {
+        const user = Auth.getUser();
+        const employee = Auth.getEmployee();
+        if (user) {
+          this._renderProfile({ ...user, employee });
+          if (headerSkeleton) headerSkeleton.classList.add('hidden');
+          if (headerContent) headerContent.classList.remove('hidden');
+          if (infoSkeleton) infoSkeleton.classList.add('hidden');
+          if (infoContent) infoContent.classList.remove('hidden');
+        } else {
+          showToast('Gagal memuat profil', 'error');
+        }
       }
     }
   },
@@ -62,8 +85,16 @@ const ProfileController = {
     setText('profile-phone', emp?.phone || '-');
     setText('profile-role', data.role === 'employee' ? 'Karyawan' : data.role || '-');
 
-    const avatarEl = document.getElementById('profile-avatar');
-    if (avatarEl) avatarEl.textContent = getInitials(data.name || '?');
+    const avatarText = document.getElementById('profile-avatar-text');
+    const avatarImg = document.getElementById('profile-avatar-img');
+    
+    if (avatarImg) {
+      avatarImg.src = '../src/img/profile-employee.png';
+      avatarImg.classList.remove('hidden');
+    }
+    if (avatarText) {
+      avatarText.classList.add('hidden');
+    }
 
     // Active status
     const statusEl = document.getElementById('profile-status');
@@ -211,6 +242,9 @@ const ProfileController = {
 
     // --- Logout ---
     document.getElementById('logout-btn')?.addEventListener('click', () => this._handleLogout());
+
+    // --- Pull to Refresh ---
+    initPullToRefresh('main-content', () => this._loadProfile());
   },
 
   async _handleChangePassword(e) {

@@ -547,27 +547,64 @@ textarea.form-input {
 }
 
 /* --- iOS List Item Components (Premium Shadowless) --- */
-.notif-card-ios {
+/* Container for the swipe items */
+.notif-swipe-item {
+  position: relative;
+  overflow: hidden;
+  background-color: white; /* Changed from red to prevent sub-pixel leakage */
+  border-radius: 1rem;
+}
+
+.notif-card-ios, .task-card-ios {
   background: white;
-  padding: 1.25rem 0.5rem;
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
+  padding: 1.25rem 0.75rem;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   display: flex;
+  z-index: 2;
+  width: 100%;
+  touch-action: pan-y; /* Allow vertical scroll, handle horizontal in JS */
+}
+
+.notif-card-ios {
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
   gap: 1rem;
 }
 
-.notif-card-ios:active {
-  background-color: #f8fafc;
+.task-card-ios {
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.04);
 }
 
-.notif-card-ios.unread {
-  background-color: rgba(81, 112, 255, 0.02);
+/* The red area that appears behind */
+.notif-swipe-reveal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100px; /* Slightly wider for better reach */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: #ef4444; /* Reveal area is actually red */
+  color: white;
+  z-index: 1;
+}
+
+.notif-swipe-reveal button {
+  width: 80px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
 }
 
 .notif-dot-ios {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.6rem;
+  height: 0.6rem;
   background: #007aff; /* Apple Blue */
   border-radius: 999px;
   flex-shrink: 0;
@@ -722,6 +759,44 @@ textarea.form-input {
   background: #e2e8f0;
   border-radius: 999px;
   margin: -0.5rem auto 1.5rem auto;
+}
+
+/* Action Sheet Items */
+.ios-action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ios-action-btn {
+  width: 100%;
+  padding: 1.125rem;
+  background: #f8fafc;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+  transition: all 0.2s ease;
+}
+
+.ios-action-btn:active {
+  background: #f1f5f9;
+  transform: scale(0.98);
+}
+
+.ios-action-btn-danger {
+  color: #ef4444;
+}
+
+.ios-action-btn-cancel {
+  margin-top: 0.5rem;
+  background: white;
+  color: var(--gray-500);
+  border: 1px solid var(--gray-100);
 }
 
 /* --- iOS Toggle Switch Component --- */

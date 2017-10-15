@@ -9,7 +9,7 @@ import { Storage } from '../../core/storage/storage.js';
 import { showToast } from '../../utils/ui-helpers.js';
 import { BgTrackingManager } from '../../core/gps/bg-tracking-manager.js';
 
-const TRACKING_INTERVAL_MS = 15_000; // 15 seconds
+const TRACKING_INTERVAL_MS = 60_000; // 60 seconds (as requested)
 
 const GpsController = {
   _interval: null,
@@ -38,16 +38,17 @@ const GpsController = {
     Storage.setTrackingActive(true);
 
     // Start native background service if available
+    // Always start time-based interval (Foreground Heartbeat)
+    await this._sendOnce(employeeId);
+    this._interval = setInterval(() => this._sendOnce(employeeId), TRACKING_INTERVAL_MS);
+
+    // Start native background service if available
     if (window.Capacitor && window.Capacitor.isNativePlatform()) {
       try {
         await BgTrackingManager.start();
       } catch (e) {
         console.error('[GpsController] BgTracking start failed:', e);
       }
-    } else {
-      // Fallback/Web Mode: keep using interval
-      await this._sendOnce(employeeId);
-      this._interval = setInterval(() => this._sendOnce(employeeId), TRACKING_INTERVAL_MS);
     }
 
     console.info('[GpsController] Tracking started');
@@ -106,8 +107,12 @@ const GpsController = {
       const coords = await GpsService.getCurrentPosition();
       await GpsService.updateLocation(coords, employeeId);
       console.debug('[GpsController] Location sent:', coords.latitude, coords.longitude);
+      
+      // Update Sync Bar (Universal)
+      BgTrackingManager.saveSyncStatus('success', 'Lokasi berhasil terkirim');
     } catch (err) {
       console.error('[GpsController] Failed to send location:', err.message);
+      BgTrackingManager.saveSyncStatus('warning', `Gagal kirim: ${err.message}`);
     }
   },
 

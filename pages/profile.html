@@ -13,10 +13,10 @@
 
 <body class="bg-slate-50 relative">
 
-  <div class="app-wrap pb-32">
+  <div class="app-wrap pb-32 relative z-20">
 
     <!-- Top Header Profile - iOS Style -->
-    <header class="bg-white dark:bg-slate-800 px-6 pt-12 pb-8 flex flex-col items-center border-b border-slate-100 dark:border-slate-700">
+    <header class="bg-white dark:bg-slate-800 px-6 pt-12 pb-8 flex flex-col items-center border-b border-slate-100 dark:border-slate-700 relative z-10">
       <div id="profile-skeleton-header" class="w-full flex flex-col items-center">
         <div class="w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-full animate-pulse mb-4"></div>
         <div class="h-6 w-40 bg-slate-100 dark:bg-slate-700 rounded animate-pulse mb-2"></div>
@@ -25,8 +25,9 @@
 
       <div id="profile-header-content" class="flex flex-col items-center hidden">
         <div id="profile-avatar"
-          class="w-24 h-24 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center text-3xl font-extrabold border-4 border-white ring-1 ring-primary-100 mb-4 shadow-sm">
-          --
+          class="w-24 h-24 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center text-3xl font-extrabold border-4 border-white ring-1 ring-primary-100 mb-4 shadow-sm overflow-hidden">
+          <img src="../src/img/profile-employee.png" id="profile-avatar-img" class="w-full h-full object-cover" alt="Profile">
+          <span id="profile-avatar-text" class="hidden">--</span>
         </div>
         <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight" id="profile-name">Memuat...</h1>
         <p class="text-slate-400 text-sm font-bold mt-1 uppercase tracking-widest" id="profile-id">ID: ------</p>
@@ -554,6 +555,7 @@
   </div>
 
   <script type="module" src="../src/features/profile/profile.controller.js"></script>
+  <script type="module" src="../src/core/nav/nav-manager.js"></script>
   <script>lucide.createIcons();</script>
 </body>
 

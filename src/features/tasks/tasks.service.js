@@ -53,6 +53,14 @@ const TasksService = {
   async completeTask(id, body = {}) {
     return ApiClient.post(`/tasks/${id}/complete`, body);
   },
+
+  /**
+   * Hide a task from employee view (Soft Hide)
+   * POST /tasks/{id}/hide
+   */
+  async hideTask(id) {
+    return ApiClient.post(`/tasks/${id}/hide`, {});
+  },
 };
 
 export { TasksService };

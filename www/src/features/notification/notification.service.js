@@ -36,6 +36,22 @@ const NotificationService = {
   async markAllRead() {
     return ApiClient.post('/notifications/read-all', {});
   },
+
+  /**
+   * Delete a single notification
+   * DELETE /notifications/{id}
+   */
+  async delete(id) {
+    return ApiClient.delete(`/notifications/${id}`);
+  },
+
+  /**
+   * Delete all notifications
+   * DELETE /notifications
+   */
+  async deleteAll() {
+    return ApiClient.delete('/notifications');
+  },
 };
 
 export { NotificationService };

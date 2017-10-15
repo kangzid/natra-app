@@ -8,7 +8,7 @@ import { Storage } from '../storage/storage.js';
 // Detect current host to handle IP-based access (useful for mobile testing)
 const currentHost = window.location.hostname;
 const isIp = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(currentHost);
-export const BASE_URL = 'http://192.168.100.50:8000/api';
+export const BASE_URL = 'https://locatrack.zalfyan.my.id/api';
 
 function _getLoginPath() {
   return window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
@@ -31,37 +31,77 @@ function _isLoginPage() {
  */
 async function request(endpoint, options = {}) {
   const token = Storage.getToken();
-
+  const url = `${BASE_URL}${endpoint}`;
+  
   const headers = {
     'Content-Type': 'application/json',
-    Accept: 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    'Accept': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...(options.headers || {}),
   };
 
+  const isNative = window.Capacitor && window.Capacitor.isNativePlatform();
+
+  if (isNative) {
+    try {
+      const { CapacitorHttp } = window.Capacitor.Plugins;
+      const response = await CapacitorHttp.request({
+        url,
+        method: options.method || 'GET',
+        headers,
+        data: options.body ? (typeof options.body === 'string' ? JSON.parse(options.body) : options.body) : undefined
+      });
+
+      const data = response.data;
+
+      if (response.status === 401) {
+        if (_isLoginPage()) {
+          const error = new Error(data?.message || 'Email atau password salah.');
+          error.status = 401;
+          error.data = data;
+          throw error;
+        }
+        Storage.clear();
+        window.location.replace(_getLoginPath());
+        return null;
+      }
+
+      if (response.status >= 400) {
+        const error = new Error(data?.message || `Server error (${response.status})`);
+        error.status = response.status;
+        error.data = data;
+        throw error;
+      }
+
+      return data;
+    } catch (err) {
+      if (err.status) throw err;
+      console.error('[ApiClient] Native Error:', err);
+      const networkError = new Error('Terjadi gangguan koneksi ke server. Silakan coba lagi nanti.');
+      networkError.status = 0;
+      throw networkError;
+    }
+  }
+
+  // --- Browser Fallback (Standard fetch) ---
   const config = {
     ...options,
     headers,
   };
 
-  // Auto-serialize body
   if (config.body && typeof config.body === 'object') {
     config.body = JSON.stringify(config.body);
   }
 
   try {
-    const response = await fetch(`${BASE_URL}${endpoint}`, config);
+    const response = await fetch(url, config);
 
-    // Parse response body first (needed for all status codes)
     let data = null;
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
       data = await response.json();
     }
 
-    // --- Global 401 handler: auto-logout ---
-    // EXCEPTION: if we are on the login page, do NOT redirect.
-    // Instead throw error so auth.controller can display "email/password salah".
     if (response.status === 401) {
       if (_isLoginPage()) {
         const error = new Error(data?.message || 'Email atau password salah.');
@@ -83,14 +123,9 @@ async function request(endpoint, options = {}) {
 
     return data;
   } catch (err) {
-    // Re-throw structured API errors (they already have .status set)
     if (err.status) throw err;
-
-    // Network / CORS / connection error — err.message is the raw browser message
-    // e.g. "Failed to fetch" (Chrome) or "NetworkError when attempting to fetch resource" (Firefox)
-    const networkError = new Error('Terjadi gangguan koneksi ke server. Silakan coba lagi nanti atau hubungi administrator jika masalah berlanjut.');
+    const networkError = new Error('Terjadi gangguan koneksi ke server. Silakan coba lagi nanti.');
     networkError.status = 0;
-    networkError.data = null;
     throw networkError;
   }
 }

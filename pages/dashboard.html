@@ -14,11 +14,11 @@
 
 <body class="bg-slate-50 relative">
 
-  <div class="app-wrap pb-32">
+  <div class="app-wrap pb-32 relative z-20">
     <!-- Konten Beranda di-scroll secara keseluruhan -->
 
     <!-- Top Header - Now part of scroll flow -->
-    <header class="bg-primary-600 px-5 pt-8 pb-12 text-white rounded-b-[2.5rem] shadow-lg relative">
+    <header class="bg-primary-600 px-5 pt-8 pb-12 text-white rounded-b-[2.5rem] shadow-lg relative z-10">
       <div class="flex justify-between items-center mb-6">
         <div>
           <p class="text-blue-100/70 text-sm font-medium mb-1" id="greeting-text">Selamat Pagi</p>
@@ -73,31 +73,26 @@
         <!-- Tasks Skeleton (iOS Style) -->
         <div class="skeleton h-48 w-full rounded-[2.25rem] mb-4"></div>
 
-        <!-- Small Modules Skeleton -->
+        <!-- Small Modules Skeleton (2x4 Grid) -->
         <div class="grid grid-cols-4 gap-4">
-          <div class="flex flex-col items-center">
-            <div class="skeleton w-12 h-12 rounded-2xl mb-2"></div>
-            <div class="skeleton h-2 w-10"></div>
-          </div>
-          <div class="flex flex-col items-center">
-            <div class="skeleton w-12 h-12 rounded-2xl mb-2"></div>
-            <div class="skeleton h-2 w-10"></div>
-          </div>
-          <div class="flex flex-col items-center">
-            <div class="skeleton w-12 h-12 rounded-2xl mb-2"></div>
-            <div class="skeleton h-2 w-10"></div>
-          </div>
-          <div class="flex flex-col items-center">
-            <div class="skeleton w-12 h-12 rounded-2xl mb-2"></div>
-            <div class="skeleton h-2 w-10"></div>
-          </div>
+          <!-- Row 1 -->
+          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
+          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
+          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
+          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
+          <!-- Row 2 -->
+          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
+          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
+          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
+          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
         </div>
       </div>
 
       <div id="dashboard-content" class="hidden space-y-4 fade-in">
 
-        <!-- Quick Menu Grid -->
-        <div class="grid grid-cols-4 gap-4 px-1">
+        <!-- Enterprise Quick Menu (2x4 Grid) -->
+        <div class="grid grid-cols-4 gap-y-6 gap-x-4 px-1">
+          <!-- Row 1 -->
           <a href="payroll.html" class="flex flex-col items-center group">
             <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
               <i data-lucide="wallet" class="w-6 h-6"></i>
@@ -121,6 +116,31 @@
               <i data-lucide="timer" class="w-6 h-6"></i>
             </div>
             <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Lembur</span>
+          </a>
+          <!-- Row 2 -->
+          <a href="reimbursement.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="receipt" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Klaim</span>
+          </a>
+          <a href="assets.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="package" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Aset</span>
+          </a>
+          <a href="loans.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="badge-dollar-sign" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Pinjam</span>
+          </a>
+          <a href="news.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="newspaper" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Berita</span>
           </a>
         </div>
 
@@ -191,23 +211,34 @@
           </div>
         </div>
 
-        <!-- GPS Toggle -->
-        <div class="card p-4 flex justify-between items-center">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-              <i data-lucide="navigation" class="w-5 h-5 text-blue-500"></i>
+        <!-- GPS Toggle & Sync Status -->
+        <div class="card p-4 space-y-3">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
+                <i data-lucide="navigation" class="w-5 h-5 text-blue-500"></i>
+              </div>
+              <div>
+                <p class="font-bold text-slate-800 text-sm">GPS Tracking</p>
+                <p class="text-xs text-slate-500" id="gps-status-text">Berhenti</p>
+              </div>
             </div>
-            <div>
-              <p class="font-bold text-slate-800 text-sm">GPS Tracking</p>
-              <p class="text-xs text-slate-500" id="gps-status-text">Berhenti</p>
-            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="gps-toggle" class="sr-only peer">
+              <div
+                class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500">
+              </div>
+            </label>
           </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="gps-toggle" class="sr-only peer">
-            <div
-              class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500">
+
+          <!-- Sync Status Bar (New) -->
+          <div id="sync-status-bar" class="hidden flex items-center justify-between px-3 py-2 bg-slate-50 rounded-xl border border-slate-100 transition-all duration-300">
+            <div class="flex items-center gap-2">
+              <div id="sync-status-dot" class="w-2 h-2 rounded-full bg-slate-300 animate-pulse"></div>
+              <span id="sync-status-msg" class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Menunggu Sinyal...</span>
             </div>
-          </label>
+            <span id="sync-status-time" class="text-[10px] font-medium text-slate-400">--:--</span>
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
@@ -299,6 +330,7 @@
   </div>
 
   <script type="module" src="../src/features/dashboard/dashboard.controller.js"></script>
+  <script type="module" src="../src/core/nav/nav-manager.js"></script>
   <script>lucide.createIcons();</script>
 </body>
 

@@ -6,7 +6,8 @@ import { AttendanceService } from './attendance.service.js';
 import { GpsController } from '../gps/gps.controller.js';
 import { GpsService } from '../gps/gps.service.js';
 import { Auth } from '../../core/auth/auth.js';
-import { showToast, setLoading, setText, formatTime, formatDate, statusBadge, showSkeleton, emptyState } from '../../utils/ui-helpers.js';
+import { showToast, setLoading, setText, formatTime, formatDate, statusBadge, showSkeleton, emptyState, initPullToRefresh } from '../../utils/ui-helpers.js';
+import { Cache } from '../../utils/cache.js';
 
 const AttendanceController = {
   _todayData: null,
@@ -17,8 +18,35 @@ const AttendanceController = {
   async init() {
     if (!Auth.requireAuth()) return;
     this._initMap();
-    await this._loadToday();
-    await this._loadMonthly();
+
+    // SWR Pattern: Load from cache
+    const cachedToday = Cache.get('att_today');
+    const cachedMonthly = Cache.get('att_monthly');
+
+    if (cachedToday) {
+      this._todayData = cachedToday;
+      this._renderTodayCard(cachedToday);
+      // Hide skeletons immediately if we have cache
+      const loadingEl = document.getElementById('today-schedule-loading');
+      const contentEl = document.getElementById('today-schedule-content');
+      if (loadingEl) loadingEl.classList.add('hidden');
+      if (contentEl) contentEl.classList.remove('hidden');
+    }
+
+    if (cachedMonthly) {
+      this._renderMonthlySummary(cachedMonthly);
+      this._renderCalendar(cachedMonthly, new Date());
+      const weeklyLoadEl = document.getElementById('weekly-shift-loading');
+      const weeklyContentEl = document.getElementById('weekly-shift-content');
+      if (weeklyLoadEl) weeklyLoadEl.classList.add('hidden');
+      if (weeklyContentEl) weeklyContentEl.classList.remove('hidden');
+    }
+
+    await Promise.all([
+      this._loadToday(),
+      this._loadMonthly()
+    ]);
+    
     this._bindEvents();
   },
 
@@ -39,12 +67,39 @@ const AttendanceController = {
   },
 
   async _loadToday() {
+    const loadingEl = document.getElementById('today-schedule-loading');
+    const contentEl = document.getElementById('today-schedule-content');
+    const weeklyLoadEl = document.getElementById('weekly-shift-loading');
+    const weeklyContentEl = document.getElementById('weekly-shift-content');
+
+    // Only show skeleton if NO cache exists
+    const hasCache = !!Cache.get('att_today');
+    if (loadingEl && !hasCache) loadingEl.classList.remove('hidden');
+    if (contentEl && !hasCache) contentEl.classList.add('hidden');
+    if (weeklyLoadEl && !hasCache) weeklyLoadEl.classList.remove('hidden');
+    if (weeklyContentEl && !hasCache) weeklyContentEl.classList.add('hidden');
+
     try {
       const res = await AttendanceService.getToday();
       this._todayData = Array.isArray(res) ? res[0] : (res?.data || (res?.id ? res : null));
+      
+      // Save to cache
+      Cache.set('att_today', this._todayData, 3);
+
       this._renderTodayCard(this._todayData);
+
+      if (loadingEl) loadingEl.classList.add('hidden');
+      if (contentEl) contentEl.classList.remove('hidden');
+      if (weeklyLoadEl) weeklyLoadEl.classList.add('hidden');
+      if (weeklyContentEl) weeklyContentEl.classList.remove('hidden');
     } catch (err) {
-      showToast('Gagal memuat data absensi hari ini', 'error');
+      if (!Cache.get('att_today')) {
+        showToast('Gagal memuat data absensi hari ini', 'error');
+      }
+      if (loadingEl) loadingEl.classList.add('hidden');
+      if (contentEl) contentEl.classList.remove('hidden');
+      if (weeklyLoadEl) weeklyLoadEl.classList.add('hidden');
+      if (weeklyContentEl) weeklyContentEl.classList.remove('hidden');
     }
   },
 
@@ -186,29 +241,35 @@ const AttendanceController = {
   async _loadMonthly() {
     try {
       const container = document.getElementById('history-list');
-      if (container) showSkeleton('history-list', 3);
+      if (container && !Cache.get('att_monthly')) showSkeleton('history-list', 3);
 
       const res = await AttendanceService.getMonthly();
       const records = Array.isArray(res) ? res : (res?.data || []);
 
-      let present = 0, late = 0, absent = 0;
-      records.forEach(r => {
-        if (r.status === 'present') present++;
-        else if (r.status === 'late') late++;
-        else if (r.status === 'absent') absent++;
-      });
+      // Save to cache
+      Cache.set('att_monthly', records, 3);
 
-      const now = new Date();
-      const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-      setText('monthly-present', present);
-      setText('monthly-late', late);
-      setText('monthly-absent', absent);
-      setText('monthly-period', `${monthNames[now.getMonth()]} ${now.getFullYear()}`);
-
-      this._renderCalendar(records, now);
+      this._renderMonthlySummary(records);
+      this._renderCalendar(records, new Date());
     } catch {
       // fail silently
     }
+  },
+
+  _renderMonthlySummary(records) {
+    let present = 0, late = 0, absent = 0;
+    records.forEach(r => {
+      if (r.status === 'present') present++;
+      else if (r.status === 'late') late++;
+      else if (r.status === 'absent') absent++;
+    });
+
+    const now = new Date();
+    const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    setText('monthly-present', present);
+    setText('monthly-late', late);
+    setText('monthly-absent', absent);
+    setText('monthly-period', `${monthNames[now.getMonth()]} ${now.getFullYear()}`);
   },
 
   _renderCalendar(records, date) {
@@ -289,6 +350,14 @@ const AttendanceController = {
     if (mapBtn) {
       mapBtn.addEventListener('click', () => this._updateManualLocation());
     }
+
+    // Pull to Refresh
+    initPullToRefresh('main-content', async () => {
+      await Promise.all([
+        this._loadToday(),
+        this._loadMonthly()
+      ]);
+    });
   },
 
   async _handleAttendance(btn) {
