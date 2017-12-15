@@ -6,7 +6,7 @@
   <title>NATRA - Profil Karyawan</title>
   <link rel="stylesheet" href="../src/styles/tailwind.css">
   <script src="../src/core/theme/theme-init.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="../src/vendor/lucide.min.js"></script>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 pb-32 min-h-screen text-slate-800 dark:text-slate-100">
   <div class="app-wrap max-w-lg mx-auto">
@@ -362,5 +362,6 @@
 
   <script type="module" src="../src/features/profile/profile.controller.js"></script>
   <script type="module" src="../src/core/nav/nav-manager.js"></script>
+  <script>if (typeof lucide !== "undefined") lucide.createIcons();</script>
 </body>
 </html>

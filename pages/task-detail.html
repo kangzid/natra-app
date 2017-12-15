@@ -6,7 +6,7 @@
   <title>NATRA - Detail Tugas</title>
   <link rel="stylesheet" href="../src/styles/tailwind.css">
   <script src="../src/core/theme/theme-init.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="../src/vendor/lucide.min.js"></script>
 </head>
 <body class="bg-slate-100/70 dark:bg-slate-950 pb-24 ">
   <div class="app-wrap max-w-md mx-auto min-h-screen">
@@ -147,5 +147,6 @@
   </div>
 
   <script type="module" src="../src/features/tasks/task-detail.controller.js"></script>
+  <script>if (typeof lucide !== "undefined") lucide.createIcons();</script>
 </body>
 </html>

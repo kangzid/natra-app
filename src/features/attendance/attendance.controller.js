@@ -88,7 +88,7 @@ const AttendanceController = {
     if (loadingEl && !hasCache) loadingEl.classList.remove('hidden');
     if (contentEl && !hasCache) contentEl.classList.add('hidden');
     if (weeklyLoadEl && !hasCache) weeklyLoadEl.classList.remove('hidden');
-    if (weeklyContentEl && !hasCache) weeklyContentEl.classList.remove('hidden');
+    if (weeklyContentEl && !hasCache) weeklyContentEl.classList.add('hidden');
 
     try {
       const res = await AttendanceService.getToday();
@@ -208,10 +208,10 @@ const AttendanceController = {
         const status = windowInfo?.window_status;
 
         if (status === 'day_off' || schedule?.is_day_off) {
-          btn.classList.add('bg-slate-700', 'text-white', 'border-slate-500', 'active:scale-95');
-          btnLabel.textContent = 'Hari Libur';
-          if (btnSub) btnSub.textContent = 'Tap Jika Masuk';
-          btn.disabled = false;
+          btn.classList.add('bg-slate-300', 'dark:bg-slate-700', 'text-slate-500', 'dark:text-slate-400', 'border-slate-300', 'dark:border-slate-600', 'cursor-not-allowed', 'opacity-80');
+          btnLabel.textContent = 'Libur Kerja';
+          if (btnSub) btnSub.textContent = 'Tidak Ada Jadwal Absen';
+          btn.disabled = true;
         } else if (status === 'too_early') {
           btn.classList.add('bg-slate-100', 'text-slate-400', 'border-slate-200', 'cursor-not-allowed');
           btnLabel.textContent = 'Belum Buka';
@@ -220,7 +220,7 @@ const AttendanceController = {
         } else if (status === 'locked_late') {
           btn.classList.add('bg-rose-50', 'text-rose-500', 'border-rose-200');
           btnLabel.textContent = 'Waktu Lewat';
-          if (btnSub) btnSub.textContent = 'Hubungi HRD';
+          if (btnSub) btnSub.textContent = '';
           btn.disabled = false; // allow click to show clear alert
         } else {
           // Normal or late allowed
@@ -289,7 +289,12 @@ const AttendanceController = {
       let html = '';
       weeklyRoster.forEach((d) => {
         const isOff = !!d.is_day_off || (d.shift_name || '').toLowerCase().includes('libur') || d.shift_code === 'OFF';
-        const cleanName = isOff ? 'Libur' : (d.shift_name || 'Reguler').replace(/\s*\(.*\)/, '').replace(/Shift\s+/i, '');
+        let cleanName = isOff ? 'Libur' : (d.shift_name || 'Reguler').replace(/\s*\(.*\)/, '').replace(/Shift\s+/i, '').trim();
+        if (cleanName.toLowerCase().startsWith('pagi')) cleanName = 'Pagi';
+        else if (cleanName.toLowerCase().startsWith('siang')) cleanName = 'Siang';
+        else if (cleanName.toLowerCase().startsWith('malam')) cleanName = 'Malam';
+        else if (cleanName.toLowerCase().startsWith('libur')) cleanName = 'Libur';
+        else if (cleanName.toLowerCase().startsWith('reguler')) cleanName = 'Reguler';
         const isNight = !isOff && (!!d.is_night_shift || cleanName.toLowerCase().includes('malam'));
         
         let iconName = 'sun';
@@ -616,11 +621,17 @@ const AttendanceController = {
     });
   },
 
-  async _handleAttendance(btn) {
+    async _handleAttendance(btn) {
     const hasCheckin = !!this._todayData?.check_in;
     const hasCheckout = !!this._todayData?.check_out;
 
     if (hasCheckin && hasCheckout) return;
+
+    // Strict guard: Prevent check-in on Day-Off
+    if (!hasCheckin && (this._todaySchedule?.is_day_off || this._todayWindow?.window_status === 'day_off')) {
+      showAlert('Hari Libur Kerja (Day-Off)', 'Hari ini adalah hari libur kerja yang telah dijadwalkan oleh perusahaan.\n\nAnda tidak dapat melakukan absensi mandiri pada hari libur.');
+      return;
+    }
 
     // Handle locked cutoff check
     if (!hasCheckin && this._todayWindow?.window_status === 'locked_late') {

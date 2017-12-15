@@ -1,16 +1,16 @@
-/**
- * Theme Initialization Script
- * Must be loaded synchronously in the <head> to prevent FOUC (Flash of Unstyled Content)
- */
-(function() {
+(function () {
   try {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    // Default to 'light' instead of dark or system preference unless explicitly set to dark
+    if (savedTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
+      if (!savedTheme) {
+        localStorage.setItem('theme', 'light');
+      }
     }
   } catch (e) {
-    // Ignore errors for SSR or if localStorage is blocked
+    document.documentElement.classList.remove('dark');
   }
 })();

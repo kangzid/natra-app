@@ -6,7 +6,7 @@
   <title>NATRA - Berita & Pengumuman</title>
   <link rel="stylesheet" href="../src/styles/tailwind.css">
   <script src="../src/core/theme/theme-init.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="../src/vendor/lucide.min.js"></script>
   <style>
     /* iOS Bottom Sheet Animation Helper */
     .ios-sheet-backdrop {
@@ -166,5 +166,6 @@
   </div>
 
   <script type="module" src="../src/features/news/news.controller.js"></script>
+  <script>if (typeof lucide !== "undefined") lucide.createIcons();</script>
 </body>
 </html>

@@ -194,6 +194,11 @@ export function setLoading(btn, loading, loadingText = 'Loading...', originalTex
   }
 }
 
+export function formatRupiah(amount) {
+  if (amount === undefined || amount === null || isNaN(Number(amount))) return 'Rp 0';
+  return `Rp ${new Intl.NumberFormat('id-ID').format(Number(amount))}`;
+}
+
 export function formatTime(timeStr) {
   if (!timeStr) return '-';
   return timeStr.substring(0, 5);
@@ -249,9 +254,14 @@ export function statusBadge(status) {
     accepted: { label: 'Diterima', bg: 'bg-blue-50 text-blue-600' },
     in_progress: { label: 'Progres', bg: 'bg-amber-50 text-amber-600' },
     completed: { label: 'Selesai', bg: 'bg-emerald-50 text-emerald-600' },
-    present: { label: 'Hadir', bg: 'bg-emerald-50 text-emerald-600' },
-    late: { label: 'Terlambat', bg: 'bg-amber-50 text-amber-600' },
-    absent: { label: 'Absen', bg: 'bg-red-50 text-red-600' },
+    present: { label: 'Hadir', bg: 'bg-emerald-50 text-emerald-600 border-emerald-200' },
+    late: { label: 'Terlambat', bg: 'bg-amber-50 text-amber-600 border-amber-200' },
+    absent: { label: 'Alpha', bg: 'bg-red-50 text-red-600 border-red-200' },
+    early_leave: { label: 'Pulang Awal', bg: 'bg-blue-50 text-blue-600 border-blue-200' },
+    sakit: { label: 'Izin Sakit', bg: 'bg-rose-50 text-rose-600 border-rose-200' },
+    cuti: { label: 'Cuti', bg: 'bg-purple-50 text-purple-600 border-purple-200' },
+    izin: { label: 'Izin Absen', bg: 'bg-sky-50 text-sky-600 border-sky-200' },
+    dinas: { label: 'Dinas Luar', bg: 'bg-indigo-50 text-indigo-600 border-indigo-200' },
   };
   const s = map[status] || map.pending;
   return `<span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest border border-black/5 ${s.bg}">${s.label}</span>`;

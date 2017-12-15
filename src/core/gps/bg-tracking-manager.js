@@ -1,175 +1,147 @@
 /**
- * NATRA Mobile - Background Tracking Manager
- * Manages foreground service for GPS and periodic background task checking
+ * NATRA Mobile - Enhanced Native Background Tracking Manager
+ * Leverages @capacitor-community/background-geolocation
+ * Keeps GPS tracking alive with live elapsed time notification ticker
  */
 
-import { GpsService } from '../../features/gps/gps.service.js';
-import { TasksService } from '../../features/tasks/tasks.service.js';
-import { Storage } from '../storage/storage.js';
 import { Auth } from '../auth/auth.js';
-
-// Safe plugin access (works in both browser and native)
-const getPlugins = () => window.Capacitor?.Plugins || {};
-const BackgroundGeolocation = getPlugins().BackgroundGeolocation;
-const LocalNotifications = getPlugins().LocalNotifications;
-
+import { Storage } from '../storage/storage.js';
+import { ApiClient } from '../api/api-client.js';
 
 let watcherId = null;
-let lastTaskCheckTime = 0;
-let startTime = 0;
-const TASK_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
+function getStoredStartTime() {
+  let stored = localStorage.getItem('natra_tracking_start_time');
+  if (!stored) {
+    stored = String(Date.now());
+    localStorage.setItem('natra_tracking_start_time', stored);
+  }
+  return parseInt(stored, 10);
+}
+
+function formatElapsed() {
+  const startTime = getStoredStartTime();
+  const elapsedMs = Math.max(0, Date.now() - startTime);
+  const totalSec = Math.floor(elapsedMs / 1000);
+  const hrs = Math.floor(totalSec / 3600);
+  const mins = Math.floor((totalSec % 3600) / 60);
+  const secs = totalSec % 60;
+  
+  if (hrs > 0) {
+    return `${hrs} jam ${mins} mnt`;
+  }
+  if (mins > 0) {
+    return `${mins} menit`;
+  }
+  return `${secs} detik`;
+}
 
 export const BgTrackingManager = {
-  /**
-   * Start background geolocation and periodic task checking
-   */
   async start() {
-    if (watcherId) return;
+    if (!window.Capacitor || !window.Capacitor.isNativePlatform()) {
+      console.log('[BgTracking] Native platform not detected, skipping background geolocation plugin.');
+      return;
+    }
+
+    const BackgroundGeolocation = window.Capacitor.Plugins.BackgroundGeolocation;
+    if (!BackgroundGeolocation) {
+      console.warn('[BgTracking] BackgroundGeolocation plugin not available on window.Capacitor.Plugins');
+      return;
+    }
 
     try {
-      // 1. Request Notifications Permission (Android 13+)
-      if (LocalNotifications) {
-        await LocalNotifications.requestPermissions();
-      }
+      getStoredStartTime();
+      const elapsedStr = formatElapsed();
 
-      startTime = Date.now();
-      lastTaskCheckTime = 0; // Force immediate check on start
-
-      // 2. Start Background Geolocation
-      if (BackgroundGeolocation) {
-        watcherId = await BackgroundGeolocation.addWatcher(
+      // Start Background Geolocation with Android Foreground Service
+      watcherId = await BackgroundGeolocation.addWatcher(
         {
-          backgroundMessage: 'NATRA - Lacak GPS Aktif',
-          backgroundTitle: 'Fitur Pelacakan Berjalan',
+          backgroundMessage: `Pelacakan aktif • Berjalan ${elapsedStr}`,
+          backgroundTitle: 'NATRA - GPS Karyawan Aktif',
           requestPermissions: true,
           stale: false,
-          distanceFilter: 0,   // Max sensitivity (update even if tiny movement)
-          interval: 60000,     // 60s
-          fastestInterval: 30000, // 30s
+          distanceFilter: 10
         },
         async (location, error) => {
           if (error) {
-            console.error('[BgTracking] Geolocation Error:', error);
-            this.saveSyncStatus('error', error.message || 'GPS Error');
+            console.error('[BgTracking] Watcher error:', error);
+            this.saveSyncStatus('warning', 'Sinyal GPS lemah');
             return;
           }
 
           if (location) {
-            // Map plugin bearing to heading for GpsService consistency
-            location.heading = location.bearing;
-            await this._onLocationUpdate(location);
+            console.log('[BgTracking] Native BG Location:', location.latitude, location.longitude);
+            await this._processLocation(location);
           }
         }
       );
-      }
 
-      console.log('[BgTracking] Started with ID:', watcherId);
-      this.saveSyncStatus('active', 'Memulai pelacakan...');
-      this._updatePersistentNotification(); 
-    } catch (err) {
-      console.error('[BgTracking] Failed to start:', err);
-      this.saveSyncStatus('error', err.message);
-      throw err;
+      console.log('[BgTracking] Started successfully with watcherId:', watcherId);
+      this.saveSyncStatus('active', 'Pelacakan Background Berjalan');
+    } catch (e) {
+      console.error('[BgTracking] Failed to start:', e);
+      this.saveSyncStatus('error', 'Gagal memulai background service');
     }
   },
 
-  /**
-   * Stop background services
-   */
   async stop() {
-    if (watcherId && BackgroundGeolocation) {
-      await BackgroundGeolocation.removeWatcher({ id: watcherId });
+    localStorage.removeItem('natra_tracking_start_time');
+
+    if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+
+    const BackgroundGeolocation = window.Capacitor.Plugins.BackgroundGeolocation;
+    if (!BackgroundGeolocation) return;
+
+    if (watcherId !== null) {
+      try {
+        await BackgroundGeolocation.removeWatcher({ id: watcherId });
+        console.log('[BgTracking] Watcher removed');
+      } catch (e) {
+        console.error('[BgTracking] Error removing watcher:', e);
+      }
       watcherId = null;
     }
+
     this.saveSyncStatus('inactive', 'Pelacakan dimatikan');
-    console.log('[BgTracking] Stopped');
   },
 
-  /**
-   * Handle location update and check for tasks
-   */
-  async _onLocationUpdate(location) {
+  async _processLocation(location) {
     const employeeId = Auth.getEmployeeNumericId();
-    if (!employeeId) {
-      console.warn('[BgTracking] No valid employee ID found');
-      return;
-    }
+    if (!employeeId) return;
 
-    // A. Update Location to Server
-    try {
-      await GpsService.updateLocation(location, employeeId);
-      this._updatePersistentNotification('GPS Aktif & Sinkron');
-      this.saveSyncStatus('success', 'Lokasi berhasil terkirim');
-    } catch (e) {
-      console.warn('[BgTracking] Location Sync Failed:', e);
-      this._updatePersistentNotification('GPS Aktif - Offline');
-      this.saveSyncStatus('warning', `Koneksi gagal: ${e.message}`);
-    }
-
-    // B. Periodic Task Check (Every 5 mins)
-    const now = Date.now();
-    if (now - lastTaskCheckTime >= TASK_CHECK_INTERVAL) {
-      lastTaskCheckTime = now;
-      await this._checkForNewTasks();
-    }
-  },
-
-  /**
-   * Fetch tasks and notify if there are new ones
-   */
-  async _checkForNewTasks() {
-    try {
-      console.log('[BgTracking] Checking for new tasks...');
-      const response = await TasksService.getTasks({ status: 'pending' });
-      const tasks = response.data || [];
-      
-      if (tasks.length > 0) {
-        // Compare with last known task count or ID to avoid duplicate notifications
-        const lastSeenCount = parseInt(localStorage.getItem('natra_last_task_count') || '0');
-        
-        if (tasks.length > lastSeenCount && LocalNotifications) {
-          await LocalNotifications.schedule({
-            notifications: [
-              {
-                title: 'Tugas Baru Tersedia!',
-                body: `Ada ${tasks.length} tugas pending yang menunggu Anda.`,
-                id: 101,
-                schedule: { at: new Date(Date.now() + 1000) },
-                sound: 'default',
-                actionTypeId: '',
-                extra: null,
-              },
-            ],
-          });
-        }
-        localStorage.setItem('natra_last_task_count', tasks.length.toString());
-      }
-    } catch (e) {
-      console.error('[BgTracking] Task check failed:', e);
-    }
-  },
-
-  /**
-   * Helper to save sync status for Dashboard display
-   */
-  saveSyncStatus(status, message) {
-    const syncData = {
-      status, // 'success' | 'error' | 'warning' | 'active'
-      message,
-      time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+    const coords = {
+      latitude: location.latitude,
+      longitude: location.longitude,
+      speed: location.speed ?? null,
+      heading: location.bearing ?? location.heading ?? null,
+      accuracy: location.accuracy ?? null,
+      altitude: location.altitude ?? null,
+      trackable_type: 'employee',
+      trackable_id: employeeId
     };
-    localStorage.setItem('natra_bg_sync_status', JSON.stringify(syncData));
-    
-    // Dispatch event to notify Dashboard if it's open
-    window.dispatchEvent(new CustomEvent('natra-sync-update', { detail: syncData }));
+
+    try {
+      await ApiClient.post('/locations', coords);
+      const elapsedStr = formatElapsed();
+      this.saveSyncStatus('success', `Lokasi terkirim (Aktif ${elapsedStr})`);
+    } catch (err) {
+      console.warn('[BgTracking] Offline/Failed to send, saving locally:', err.message);
+      this.saveSyncStatus('warning', 'Menyimpan di memori offline');
+    }
   },
 
-  /**
-   * Update the persistent notification text (Native only)
-   */
-  _updatePersistentNotification(status = 'GPS Aktif') {
-    const elapsedMinutes = Math.floor((Date.now() - startTime) / 60000);
-    // console.log logic remains for dev
-    console.log(`[BgTracking] Status: ${status}, Time: ${elapsedMinutes}m`);
+  saveSyncStatus(status, message) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const syncData = {
+      status,
+      message,
+      time: timeStr,
+      timestamp: Date.now()
+    };
+    try {
+      localStorage.setItem('natra_bg_sync_status', JSON.stringify(syncData));
+      window.dispatchEvent(new CustomEvent('natra-sync-update', { detail: syncData }));
+    } catch (e) {}
   }
 };

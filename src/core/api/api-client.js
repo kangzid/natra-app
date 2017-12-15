@@ -6,7 +6,22 @@
 import { Storage } from '../storage/storage.js';
 
 export function getBaseUrl() {
-  // If running locally in browser (localhost / 127.0.0.1)
+  // Check localStorage if custom URL is provided
+  if (typeof localStorage !== 'undefined') {
+    const customUrl = localStorage.getItem('natra_api_base_url');
+    if (customUrl && !customUrl.includes('zalfyan.my.id')) {
+      return customUrl.replace(/\/$/, '');
+    }
+  }
+
+  // If running in Native Capacitor App (Android / iOS)
+  const isNative = typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isNativePlatform();
+  if (isNative) {
+    // Default WiFi LAN IP of development server
+    return 'http://192.168.100.50:8000/api';
+  }
+
+  // If running in browser
   if (typeof window !== 'undefined' && window.location) {
     const hostname = window.location.hostname;
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
@@ -17,15 +32,7 @@ export function getBaseUrl() {
     }
   }
 
-  // Check localStorage if custom URL is provided
-  if (typeof localStorage !== 'undefined') {
-    const customUrl = localStorage.getItem('natra_api_base_url');
-    if (customUrl && !customUrl.includes('zalfyan.my.id')) {
-      return customUrl.replace(/\/$/, '');
-    }
-  }
-
-  return 'http://127.0.0.1:8000/api';
+  return 'http://192.168.100.50:8000/api';
 }
 
 export const BASE_URL = getBaseUrl();
@@ -106,7 +113,7 @@ async function request(endpoint, options = {}) {
     } catch (err) {
       if (err.status !== undefined) throw err;
       console.error('[ApiClient] Native Error:', err);
-      const networkError = new Error('Terjadi gangguan koneksi ke server. Silakan coba lagi nanti.');
+      const networkError = new Error('Terjadi gangguan koneksi ke server (192.168.100.50:8000). Pastikan HP & Laptop terhubung ke WiFi yang sama.');
       networkError.status = 0;
       throw networkError;
     }

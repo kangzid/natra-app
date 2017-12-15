@@ -14,26 +14,31 @@ const ProfileController = {
   _comprehensiveData: null,
   _activeDetailTab: 'financial',
 
-  async init() {
-    if (!Auth.requireAuth()) return;
-    if (window.lucide) window.lucide.createIcons();
+    async init() {
+    // 1. Instant Render from local session / cache (Zero latency)
+    const localUser = Auth.getUser();
+    if (localUser) {
+      this._profileData = localUser;
+      this._renderProfile(localUser);
+    }
 
-    await this._loadProfile();
     this._bindEvents();
+    
+    // 2. Background silent refresh for fresh stats & status
+    await this._loadProfile();
   },
 
   async _loadProfile() {
     try {
       const user = await ProfileService.getProfile();
-      this._profileData = user;
-      this._renderProfile(user);
-    } catch (err) {
-      console.warn('[ProfileController] Load profile fallback to local session:', err.message);
-      const user = Auth.getUser();
       if (user) {
         this._profileData = user;
         this._renderProfile(user);
+        // Update stored session with fresh user data
+        Auth.setUser(user);
       }
+    } catch (err) {
+      console.warn('[ProfileController] Silent background refresh note:', err.message);
     }
   },
 
@@ -279,8 +284,8 @@ const ProfileController = {
         ? data.contract_allowances
         : (data.allowances?.items || []);
 
-      const bpjsKes = data.bpjs?.bpjs_kesehatan_number || '0001892817261';
-      const bpjsTk = data.bpjs?.bpjs_tk_number || '19028172611';
+      const bpjsKes = data.bpjs?.bpjs_kesehatan_number || data.bpjs?.kesehatan?.bpjs_number || 'Belum Terdaftar';
+      const bpjsTk = data.bpjs?.bpjs_tk_number || data.bpjs?.ketenagakerjaan?.bpjs_number || 'Belum Terdaftar';
 
       html = `
         <!-- Basic Salary & Bank Card -->

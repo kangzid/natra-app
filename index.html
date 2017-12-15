@@ -230,6 +230,31 @@
       await Promise.race([fetchPromise, timeoutPromise]);
     }
 
+        async function requestAppPermissions() {
+      if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+        try {
+          // 1. Request Geolocation permissions
+          const Geolocation = window.Capacitor.Plugins.Geolocation;
+          if (Geolocation) {
+            const geoStatus = await Geolocation.checkPermissions();
+            if (geoStatus.location !== 'granted') {
+              await Geolocation.requestPermissions();
+            }
+          }
+          // 2. Request Local Notifications permissions
+          const LocalNotifications = window.Capacitor.Plugins.LocalNotifications;
+          if (LocalNotifications) {
+            const notifStatus = await LocalNotifications.checkPermissions();
+            if (notifStatus.display !== 'granted') {
+              await LocalNotifications.requestPermissions();
+            }
+          }
+        } catch (e) {
+          console.warn('[Permissions] Permission prompt note:', e);
+        }
+      }
+    }
+
     window.checkConnectionAndInit = async function () {
       const overlay = document.getElementById('offline-overlay');
 
@@ -242,6 +267,7 @@
 
       // Fetch remote config (with a max timeout of 3s so the app doesn't hang)
       await loadRemoteConfigWithTimeout();
+      await requestAppPermissions();
 
       // Proceed with normal init
       setTimeout(() => {

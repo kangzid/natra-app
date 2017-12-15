@@ -290,19 +290,34 @@ class PayrollController {
           return;
         }
 
-        downloadBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span>Membuka Dokumen...</span>';
+                downloadBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span>Membuka Dokumen...</span>';
         if (window.lucide) window.lucide.createIcons();
 
-        const apiUrl = window.ENV?.API_URL || 'http://127.0.0.1:8000/api';
-        const token = localStorage.getItem('token') || '';
-        const downloadUrl = `${apiUrl}/hris/payrolls/payslips/${slip.id}/download-pdf?token=${token}&autoprint=1`;
-        
-        window.open(downloadUrl, '_blank');
+        try {
+          const baseUrl = ApiClient.getBaseUrl();
+          const token = Storage.getToken() || localStorage.getItem('token') || '';
+          const downloadUrl = `${baseUrl}/hris/payrolls/payslips/${slip.id}/download-pdf?token=${token}&autoprint=1`;
 
-        setTimeout(() => {
-          downloadBtn.innerHTML = '<i data-lucide="download" class="w-5 h-5"></i> <span>Unduh Slip Gaji (PDF)</span>';
-          if (window.lucide) window.lucide.createIcons();
-        }, 1000);
+          if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+            // Android Native Capacitor App: Direct streaming
+            window.location.href = downloadUrl;
+          } else {
+            // Web Browser: Open in new tab for viewing & printing/saving as PDF
+            const newWindow = window.open(downloadUrl, '_blank');
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+              // Fallback if popup is blocked
+              window.location.href = downloadUrl;
+            }
+          }
+        } catch (err) {
+          console.error('Download error:', err);
+          showToast('Gagal mengunduh slip gaji', 'error');
+        } finally {
+          setTimeout(() => {
+            downloadBtn.innerHTML = '<i data-lucide="download" class="w-5 h-5"></i> <span>Unduh Slip Gaji (PDF)</span>';
+            if (window.lucide) window.lucide.createIcons();
+          }, 1500);
+        }
       });
     }
   }

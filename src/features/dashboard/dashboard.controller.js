@@ -52,48 +52,41 @@ const DashboardController = {
     }
   },
 
-  _renderHeader() {
+    _renderHeader() {
     const user = Auth.getUser();
-    const employee = Auth.getEmployee();
+    const employee = Auth.getEmployee() || user?.employee || {};
     const name = user?.name || 'Karyawan';
     const hour = new Date().getHours();
     const greeting = hour < 11 ? 'Selamat Pagi' : hour < 15 ? 'Selamat Siang' : hour < 18 ? 'Selamat Sore' : 'Selamat Malam';
 
     setText('greeting-text', greeting);
     setText('user-name', name);
-    setText('employee-id-text', employee?.employee_id || '-');
-    setText('shift-text', employee?.shift || 'Shift Siang'); // Dummy shift data
+    setText('employee-id-text', employee?.employee_id || user?.employee_id || 'EMP001');
 
-    const avatarEl = document.getElementById('user-avatar');
+    const cachedData = Cache.get('dashboard');
+    const shiftName = cachedData?.today_shift || employee?.shift || 'Shift Pagi Operasional';
+    setText('shift-text', shiftName);
+
     const avatarImg = document.getElementById('user-avatar-img');
     const avatarText = document.getElementById('user-avatar-text');
+    const photo = user?.photo_base64 || employee?.photo_base64 || cachedData?.employee?.photo_base64 || cachedData?.employee?.user?.photo_base64;
 
-    if (avatarEl) {
-      // Use local employee profile image
-      const profileImageUrl = '../src/img/profile-employee.png';
-      if (avatarImg) {
-        avatarImg.src = profileImageUrl;
-        avatarImg.classList.remove('hidden');
-      }
-      if (avatarText) {
-        avatarText.classList.add('hidden');
-      }
+    if (avatarImg && photo) {
+      avatarImg.src = photo;
+      avatarImg.classList.remove('hidden');
+      if (avatarText) avatarText.classList.add('hidden');
+    } else if (avatarText) {
+      avatarText.textContent = getInitials(name);
+      avatarText.classList.remove('hidden');
+      if (avatarImg) avatarImg.classList.add('hidden');
     }
   },
 
   _attendanceChart: null,
 
-  async _loadDashboard() {
-    const loadingEl = document.getElementById('dashboard-loading');
-    const contentEl = document.getElementById('dashboard-content');
-    
-    // Only show skeleton if NO cache exists
-    const hasCache = !!Cache.get('dashboard');
-    if (loadingEl && !hasCache) loadingEl.classList.remove('hidden');
-    if (contentEl && !hasCache) contentEl.classList.add('hidden');
-
+        async _loadDashboard(forceRefresh = false) {
     try {
-      // Fetch concurrently
+      // Fetch concurrently in the background (silent refresh)
       const [dashboardRes, monthlyRes, notifRes] = await Promise.all([
         DashboardService.getDashboard(),
         AttendanceService.getMonthly().catch(() => []),
@@ -102,7 +95,7 @@ const DashboardController = {
 
       const data = dashboardRes || {};
       
-      // Calculate monthly summary manually since API returns an array
+      // Calculate monthly summary
       const monthlyRecords = Array.isArray(monthlyRes) ? monthlyRes : (monthlyRes?.data || []);
       let present = 0, late = 0, absent = 0;
       monthlyRecords.forEach(r => {
@@ -115,30 +108,15 @@ const DashboardController = {
       // Map unread notifications
       data.unread_notifications = notifRes?.count ?? (Array.isArray(notifRes) ? notifRes.length : (Array.isArray(notifRes?.data) ? notifRes.data.length : 0));
 
-      // Save to cache for next time
-      Cache.set('dashboard', data, 3); // Cache for 3 mins
+      // Save to cache (valid for 15 mins)
+      Cache.set('dashboard', data, 15);
 
+      // Smoothly update UI with fresh data
       this._renderDashboard(data);
-      
-      // Small delay to ensure DOM is ready for animation & chart
-      setTimeout(() => {
-        if (contentEl) {
-          contentEl.classList.remove('hidden');
-          contentEl.style.display = 'block'; // Force display to ensure height calc
-        }
-        if (loadingEl) loadingEl.classList.add('hidden');
-        
-        // Render Chart after content is visible for proper canvas sizing
-        this._renderAttendanceChart(data.monthly_attendance);
-      }, 50);
+      this._renderAttendanceChart(data.monthly_attendance);
 
     } catch (err) {
-      console.error('Dashboard Error:', err);
-      // Only show toast if we have no cached data (fresh load failed)
-      if (!Cache.get('dashboard')) {
-        showToast(err.message || 'Gagal memuat dashboard', 'error');
-      }
-      if (loadingEl) loadingEl.classList.add('hidden');
+      console.warn('Dashboard background refresh note:', err.message);
     }
   },
 
@@ -187,6 +165,17 @@ const DashboardController = {
   },
 
   _renderDashboard(data) {
+    if (data.today_shift) {
+      setText('shift-text', data.today_shift);
+    }
+    const photo = data.employee?.photo_base64 || data.employee?.user?.photo_base64 || data.employee?.user?.photo_path;
+    const avatarImg = document.getElementById('user-avatar-img');
+    const avatarText = document.getElementById('user-avatar-text');
+    if (avatarImg && photo) {
+      avatarImg.src = photo;
+      avatarImg.classList.remove('hidden');
+      if (avatarText) avatarText.classList.add('hidden');
+    }
     // 1. Smart Attendance Today - Punch Style
     let att = data.today_attendance;
     if (Array.isArray(att)) att = att.length > 0 ? att[0] : null;
@@ -276,9 +265,21 @@ const DashboardController = {
     initPullToRefresh('main-content', () => this._loadDashboard());
   },
 
-  _restoreTracking() {
+    _restoreTracking() {
+    const isTrackingActive = Storage.isTrackingActive();
+    const toggle = document.getElementById('gps-toggle');
+    const statusText = document.getElementById('gps-status-text');
+    const dot = document.getElementById('gps-dot');
+
+    if (toggle) toggle.checked = isTrackingActive;
+    if (statusText) statusText.textContent = isTrackingActive ? 'Aktif' : 'Nonaktif';
+    if (dot) {
+      dot.classList.toggle('dot-active', isTrackingActive);
+      dot.classList.toggle('dot-inactive', !isTrackingActive);
+    }
+
     // Resume tracking if it was active before
-    if (Storage.isTrackingActive()) {
+    if (isTrackingActive) {
       GpsController.startTracking();
     }
     

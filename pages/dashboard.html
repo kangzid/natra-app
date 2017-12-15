@@ -8,8 +8,8 @@
   <title>NATRA - Dashboard</title>
   <link rel="stylesheet" href="../src/styles/tailwind.css">
   <script src="../src/core/theme/theme-init.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../src/vendor/lucide.min.js"></script>
+  <script src="../src/vendor/chart.umd.min.js"></script>
 </head>
 
 <body class="bg-slate-50 relative">
@@ -58,37 +58,7 @@
         </button>
       </div>
 
-      <!-- Refined Skeleton Screens -->
-      <div id="dashboard-loading" class="space-y-4">
-        <!-- Attendance Skeleton -->
-        <div class="card p-5">
-          <div class="flex justify-between items-center mb-4">
-            <div class="skeleton h-5 w-32"></div>
-            <div class="skeleton h-6 w-16 rounded-full"></div>
-          </div>
-        </div>
-        <!-- Attendance Skeleton (iOS Style) -->
-        <div class="skeleton h-56 w-full rounded-[2rem] mb-4"></div>
-
-        <!-- Tasks Skeleton (iOS Style) -->
-        <div class="skeleton h-48 w-full rounded-[2.25rem] mb-4"></div>
-
-        <!-- Small Modules Skeleton (2x4 Grid) -->
-        <div class="grid grid-cols-4 gap-4">
-          <!-- Row 1 -->
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <!-- Row 2 -->
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-        </div>
-      </div>
-
-      <div id="dashboard-content" class="hidden space-y-4 fade-in">
+      <div id="dashboard-content" class="space-y-4">
 
         <!-- Enterprise Quick Menu (2x4 Grid) -->
         <div class="grid grid-cols-4 gap-y-6 gap-x-4 px-1">

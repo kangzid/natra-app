@@ -14,6 +14,14 @@ const ProfileService = {
   },
 
   /**
+   * Get comprehensive employee profile data (Finances, Contracts, KPI, Assets, Loans, BPJS, etc.)
+   * GET /employees/{id}/profile
+   */
+  async getComprehensiveProfile(employeeId = 'me') {
+    return ApiClient.get(`/employees/${employeeId}/profile`);
+  },
+
+  /**
    * Change password
    * PUT /change-password
    */

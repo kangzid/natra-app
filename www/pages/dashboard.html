@@ -8,8 +8,8 @@
   <title>NATRA - Dashboard</title>
   <link rel="stylesheet" href="../src/styles/tailwind.css">
   <script src="../src/core/theme/theme-init.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../src/vendor/lucide.min.js"></script>
+  <script src="../src/vendor/chart.umd.min.js"></script>
 </head>
 
 <body class="bg-slate-50 relative">
@@ -58,37 +58,7 @@
         </button>
       </div>
 
-      <!-- Refined Skeleton Screens -->
-      <div id="dashboard-loading" class="space-y-4">
-        <!-- Attendance Skeleton -->
-        <div class="card p-5">
-          <div class="flex justify-between items-center mb-4">
-            <div class="skeleton h-5 w-32"></div>
-            <div class="skeleton h-6 w-16 rounded-full"></div>
-          </div>
-        </div>
-        <!-- Attendance Skeleton (iOS Style) -->
-        <div class="skeleton h-56 w-full rounded-[2rem] mb-4"></div>
-
-        <!-- Tasks Skeleton (iOS Style) -->
-        <div class="skeleton h-48 w-full rounded-[2.25rem] mb-4"></div>
-
-        <!-- Small Modules Skeleton (2x4 Grid) -->
-        <div class="grid grid-cols-4 gap-4">
-          <!-- Row 1 -->
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <!-- Row 2 -->
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-          <div class="flex flex-col items-center"><div class="skeleton w-12 h-12 rounded-2xl mb-2"></div><div class="skeleton h-2 w-10"></div></div>
-        </div>
-      </div>
-
-      <div id="dashboard-content" class="hidden space-y-4 fade-in">
+      <div id="dashboard-content" class="space-y-4">
 
         <!-- Enterprise Quick Menu (2x4 Grid) -->
         <div class="grid grid-cols-4 gap-y-6 gap-x-4 px-1">
@@ -103,13 +73,7 @@
             <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
               <i data-lucide="calendar-heart" class="w-6 h-6"></i>
             </div>
-            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Cuti</span>
-          </a>
-          <a href="permission.html" class="flex flex-col items-center group">
-            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
-              <i data-lucide="user-check" class="w-6 h-6"></i>
-            </div>
-            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Izin</span>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Cuti & Izin</span>
           </a>
           <a href="overtime.html" class="flex flex-col items-center group">
             <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
@@ -117,13 +81,13 @@
             </div>
             <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Lembur</span>
           </a>
-          <!-- Row 2 -->
           <a href="reimbursement.html" class="flex flex-col items-center group">
             <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
               <i data-lucide="receipt" class="w-6 h-6"></i>
             </div>
             <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Klaim</span>
           </a>
+          <!-- Row 2 -->
           <a href="assets.html" class="flex flex-col items-center group">
             <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
               <i data-lucide="package" class="w-6 h-6"></i>
@@ -141,6 +105,12 @@
               <i data-lucide="newspaper" class="w-6 h-6"></i>
             </div>
             <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Berita</span>
+          </a>
+          <a href="menu.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="layout-grid" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200">Lainnya</span>
           </a>
         </div>
 
@@ -231,7 +201,7 @@
             </label>
           </div>
 
-          <!-- Sync Status Bar (New) -->
+          <!-- Sync Status Bar -->
           <div id="sync-status-bar" class="hidden flex items-center justify-between px-3 py-2 bg-slate-50 rounded-xl border border-slate-100 transition-all duration-300">
             <div class="flex items-center gap-2">
               <div id="sync-status-dot" class="w-2 h-2 rounded-full bg-slate-300 animate-pulse"></div>
