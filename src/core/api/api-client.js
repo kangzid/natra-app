@@ -5,11 +5,30 @@
 
 import { Storage } from '../storage/storage.js';
 
-// Uncomment the line below to test with local IP address if backend in cPanel is down
-// export const BASE_URL = 'http://192.168.100.50:8000/api';
+export function getBaseUrl() {
+  // If running locally in browser (localhost / 127.0.0.1)
+  if (typeof window !== 'undefined' && window.location) {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://127.0.0.1:8000/api';
+    }
+    if (hostname && hostname !== '' && hostname !== '0.0.0.0') {
+      return `http://${hostname}:8000/api`;
+    }
+  }
 
-// Default to Production cPanel endpoint
-export const BASE_URL = 'https://locatrack.zalfyan.my.id/api';
+  // Check localStorage if custom URL is provided
+  if (typeof localStorage !== 'undefined') {
+    const customUrl = localStorage.getItem('natra_api_base_url');
+    if (customUrl && !customUrl.includes('zalfyan.my.id')) {
+      return customUrl.replace(/\/$/, '');
+    }
+  }
+
+  return 'http://127.0.0.1:8000/api';
+}
+
+export const BASE_URL = getBaseUrl();
 
 function _getLoginPath() {
   return window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
@@ -32,7 +51,9 @@ function _isLoginPage() {
  */
 async function request(endpoint, options = {}) {
   const token = Storage.getToken();
-  const url = `${BASE_URL}${endpoint}`;
+  const currentBaseUrl = getBaseUrl();
+  const url = `${currentBaseUrl}${endpoint}`;
+  console.log(`[ApiClient] ${options.method || 'GET'} -> ${url}`);
 
   const headers = {
     'Content-Type': 'application/json',
@@ -68,7 +89,14 @@ async function request(endpoint, options = {}) {
       }
 
       if (response.status >= 400) {
-        const error = new Error(data?.message || `Server error (${response.status})`);
+        let errorMsg = data?.message || `Server error (${response.status})`;
+        if (data?.errors && typeof data.errors === 'object') {
+          const firstKey = Object.keys(data.errors)[0];
+          if (firstKey && Array.isArray(data.errors[firstKey]) && data.errors[firstKey].length > 0) {
+            errorMsg = data.errors[firstKey][0];
+          }
+        }
+        const error = new Error(errorMsg);
         error.status = response.status;
         error.data = data;
         throw error;
@@ -76,7 +104,7 @@ async function request(endpoint, options = {}) {
 
       return data;
     } catch (err) {
-      if (err.status) throw err;
+      if (err.status !== undefined) throw err;
       console.error('[ApiClient] Native Error:', err);
       const networkError = new Error('Terjadi gangguan koneksi ke server. Silakan coba lagi nanti.');
       networkError.status = 0;
@@ -116,7 +144,14 @@ async function request(endpoint, options = {}) {
     }
 
     if (!response.ok) {
-      const error = new Error(data?.message || `Server error (${response.status})`);
+      let errorMsg = data?.message || `Server error (${response.status})`;
+      if (data?.errors && typeof data.errors === 'object') {
+        const firstKey = Object.keys(data.errors)[0];
+        if (firstKey && Array.isArray(data.errors[firstKey]) && data.errors[firstKey].length > 0) {
+          errorMsg = data.errors[firstKey][0];
+        }
+      }
+      const error = new Error(errorMsg);
       error.status = response.status;
       error.data = data;
       throw error;
@@ -124,7 +159,8 @@ async function request(endpoint, options = {}) {
 
     return data;
   } catch (err) {
-    if (err.status) throw err;
+    if (err.status !== undefined) throw err;
+    console.error('[ApiClient] Fetch Error:', err);
     const networkError = new Error('Terjadi gangguan koneksi ke server. Silakan coba lagi nanti.');
     networkError.status = 0;
     throw networkError;
@@ -132,6 +168,10 @@ async function request(endpoint, options = {}) {
 }
 
 const ApiClient = {
+  getBaseUrl() {
+    return getBaseUrl();
+  },
+
   get(endpoint, options = {}) {
     return request(endpoint, { ...options, method: 'GET' });
   },

@@ -109,11 +109,17 @@ const TasksController = {
   _taskCardHTML(task) {
     const isUrgent = this._isDueUrgent(task.due_date);
     const canHide = ['completed', 'cancelled'].includes(task.status);
+    const isDispatch = task.task_type === 'dispatch' || task.type === 'dispatch' || !!task.vehicle_id;
+    const vehicleInfo = task.vehicle?.vehicle_number || task.vehicle?.license_plate || task.vehicle?.plate_number || (task.vehicle_id ? 'Armada Ditugaskan' : null);
     
     const cardContent = `
       <div class="task-card-ios" data-task-id="${task.id}">
         <div class="flex justify-between items-start mb-3">
           <div class="flex flex-wrap gap-2">
+            ${isDispatch 
+              ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-600 border border-blue-100 flex items-center gap-1"><i data-lucide="truck" class="w-3 h-3"></i> Driver Dispatch</span>' 
+              : '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600 border border-slate-200 flex items-center gap-1"><i data-lucide="clipboard-list" class="w-3 h-3"></i> Tugas Umum</span>'
+            }
             ${priorityBadge(task.priority)}
             ${statusBadge(task.status)}
           </div>
@@ -121,8 +127,28 @@ const TasksController = {
         
         <h3 class="ios-task-title">${task.title}</h3>
         
-        ${task.description ? `<p class="text-[13px] text-slate-500 line-clamp-2 mb-4 leading-snug font-medium">${task.description}</p>` : '<div class="mb-4"></div>'}
+        ${task.description ? `<p class="text-[13px] text-slate-500 line-clamp-2 mb-3 leading-snug font-medium">${task.description}</p>` : '<div class="mb-2"></div>'}
         
+        ${isDispatch && (vehicleInfo || task.origin_address || task.destination_address) ? `
+          <div class="mb-3 p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700/60 space-y-1.5 text-xs">
+            ${vehicleInfo ? `
+              <div class="flex items-center gap-1.5 text-slate-700 dark:text-slate-200 font-bold">
+                <i data-lucide="car" class="w-3.5 h-3.5 text-blue-500 shrink-0"></i>
+                <span>${vehicleInfo}</span>
+                ${task.start_odometer ? `<span class="text-[10px] text-slate-400 font-normal ml-auto">Odo: ${Number(task.start_odometer).toLocaleString()} km</span>` : ''}
+              </div>
+            ` : ''}
+            ${task.origin_address && task.destination_address ? `
+              <div class="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                <i data-lucide="navigation" class="w-3 h-3 text-primary-500 shrink-0"></i>
+                <span class="truncate">${task.origin_address}</span>
+                <span class="text-slate-400 font-bold">&rarr;</span>
+                <span class="truncate">${task.destination_address}</span>
+              </div>
+            ` : ''}
+          </div>
+        ` : ''}
+
         <div class="flex items-center justify-between pt-3 border-t border-slate-50">
           <div class="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-widest ${isUrgent ? 'text-red-500' : 'text-primary-500'}">
             <div class="w-2 h-2 rounded-full ${isUrgent ? 'bg-red-500' : 'bg-primary-500'} animate-pulse"></div>

@@ -8,8 +8,12 @@ import { Storage } from '../storage/storage.js';
 // Uncomment the line below to test with local IP address if backend in cPanel is down
 // export const BASE_URL = 'http://192.168.100.50:8000/api';
 
-// Default to Production cPanel endpoint
-export const BASE_URL = 'https://locatrack.zalfyan.my.id/api';
+// Default to Production cPanel endpoint fallback
+const DEFAULT_BASE_URL = 'http://10.110.129.36:8000/api';
+
+// Get dynamically from Remote Config cache in localStorage, fallback to default
+export const BASE_URL = DEFAULT_BASE_URL; // Forced for local testing
+// export const BASE_URL = localStorage.getItem('natra_api_base_url') || DEFAULT_BASE_URL;
 
 function _getLoginPath() {
   return window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';

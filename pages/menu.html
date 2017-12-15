@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NATRA - Semua Menu</title>
+  <link rel="stylesheet" href="../src/styles/tailwind.css">
+  <script src="../src/core/theme/theme-init.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 pb-28 min-h-screen">
+  <div class="app-wrap">
+    
+    <!-- Top Header -->
+    <header class="module-header bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-700 sticky top-0 z-[100]">
+      <div class="module-header-row flex items-center justify-between px-5 h-16">
+        <div class="flex items-center gap-3">
+          <button onclick="window.location.href='dashboard.html'" class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
+            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+          </button>
+          <div>
+            <h1 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Daftar Menu</h1>
+            <p class="text-[10px] text-slate-400 font-semibold tracking-wide">Semua Fitur Pegawai</p>
+          </div>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400">
+          <i data-lucide="layout-grid" class="w-5 h-5"></i>
+        </div>
+      </div>
+    </header>
+
+    <main class="px-5 py-6 space-y-7">
+
+      <!-- Section 1: Kompensasi & Keuangan -->
+      <section class="bg-white dark:bg-slate-800 rounded-[2rem] p-5 shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
+        <div class="flex items-center gap-2 px-1">
+          <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+          <h2 class="text-[11px] font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-widest">Kompensasi & Keuangan</h2>
+        </div>
+
+        <div class="grid grid-cols-4 gap-y-6 gap-x-4">
+          <!-- Payroll -->
+          <a href="payroll.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="wallet" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Payroll</span>
+          </a>
+
+          <!-- Lembur -->
+          <a href="overtime.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="timer" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Lembur</span>
+          </a>
+
+          <!-- Klaim -->
+          <a href="reimbursement.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="receipt" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Klaim</span>
+          </a>
+
+          <!-- Pinjam -->
+          <a href="loans.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="badge-dollar-sign" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Pinjam</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Section 2: Kehadiran & Operasional -->
+      <section class="bg-white dark:bg-slate-800 rounded-[2rem] p-5 shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
+        <div class="flex items-center gap-2 px-1">
+          <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+          <h2 class="text-[11px] font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-widest">Kehadiran & Operasional</h2>
+        </div>
+
+        <div class="grid grid-cols-4 gap-y-6 gap-x-4">
+          <!-- Cuti & Izin -->
+          <a href="leave.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="calendar-heart" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Cuti & Izin</span>
+          </a>
+
+          <!-- Aset -->
+          <a href="assets.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="package" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Aset</span>
+          </a>
+
+          <!-- Berita -->
+          <a href="news.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="newspaper" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Berita</span>
+          </a>
+
+          <!-- Absensi -->
+          <a href="attendance.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="fingerprint" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Absensi</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Section 3: Layanan Utama -->
+      <section class="bg-white dark:bg-slate-800 rounded-[2rem] p-5 shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
+        <div class="flex items-center gap-2 px-1">
+          <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+          <h2 class="text-[11px] font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-widest">Layanan Utama & Akun</h2>
+        </div>
+
+        <div class="grid grid-cols-4 gap-y-6 gap-x-4">
+          <!-- Tugas -->
+          <a href="tasks.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Tugas</span>
+          </a>
+
+          <!-- Notifikasi -->
+          <a href="notifications.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="bell" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Notifikasi</span>
+          </a>
+
+          <!-- Profil -->
+          <a href="profile.html" class="flex flex-col items-center group">
+            <div class="w-14 h-14 bg-blue-50/50 dark:bg-blue-900/20 rounded-2xl shadow-sm border border-blue-100/30 dark:border-blue-800/20 flex items-center justify-center text-primary-600 group-active:scale-90 transition-transform mb-2">
+              <i data-lucide="user" class="w-6 h-6"></i>
+            </div>
+            <span class="text-[10px] font-extrabold text-slate-800 dark:text-slate-200 text-center">Profil</span>
+          </a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="glass-nav-floating">
+      <div class="flex justify-around items-center">
+        <a href="dashboard.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Beranda</span>
+        </a>
+        <a href="attendance.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="fingerprint" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Absensi</span>
+        </a>
+        <a href="tasks.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Tugas</span>
+        </a>
+        <a href="notifications.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="bell" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Notif</span>
+        </a>
+        <a href="profile.html" class="nav-item text-slate-400">
+          <div class="nav-icon-wrap">
+            <i data-lucide="user" class="w-6 h-6"></i>
+          </div>
+          <span class="nav-label">Profil</span>
+        </a>
+      </div>
+    </nav>
+
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

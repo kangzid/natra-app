@@ -6,13 +6,13 @@
   "scripts": {
     "dev": "npm-run-all --parallel dev:css dev:server",
     "dev:css": "tailwindcss -i ./src/styles/input.css -o ./src/styles/tailwind.css --watch",
-    "dev:server": "http-server . -p 3000 -c-1 --cors -o",
+    "dev:server": "http-server . -p 3000 -c-1 --cors",
     "build:css": "tailwindcss -i ./src/styles/input.css -o ./src/styles/tailwind.css --minify",
     "prep:www": "powershell -Command \"if (Test-Path www) { Remove-Item -Path www -Recurse -Force }; New-Item -ItemType Directory -Path www; Copy-Item index.html www/; Copy-Item pages www/ -Recurse; Copy-Item src www/ -Recurse\"",
-    "cap:add:android": "npm run build:css && npm run prep:www && npx cap add android",
-    "cap:sync": "npm run build:css && npm run prep:www && npx cap sync",
-    "cap:run:android": "npx cap run android",
-    "cap:open:android": "npx cap open android",
+    "cap:add:android": "pnpm run build:css && pnpm run prep:www && pnpm cap add android",
+    "cap:sync": "pnpm run build:css && pnpm run prep:www && pnpm cap sync",
+    "cap:run:android": "pnpm cap run android",
+    "cap:open:android": "pnpm cap open android",
     "build:apk": "cd android && gradlew assembleDebug"
   },
   "dependencies": {

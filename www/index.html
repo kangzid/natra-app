@@ -182,8 +182,52 @@
 
   <script type="module">
     import { Auth } from './src/core/auth/auth.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    import { getRemoteConfig, getValue, fetchAndActivate } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-remote-config.js';
 
-    window.checkConnectionAndInit = function () {
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_aOmXgaOiFY9aFXjFJN7wkKtpBlODY1c",
+      authDomain: "locatrack-69ca3.firebaseapp.com",
+      databaseURL: "https://locatrack-69ca3-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "locatrack-69ca3",
+      storageBucket: "locatrack-69ca3.firebasestorage.app",
+      messagingSenderId: "1017310577620",
+      appId: "1:1017310577620:web:6db2d61004e5144c958c41",
+      measurementId: "G-BHB7H33ZZS"
+    };
+
+    async function loadRemoteConfig() {
+      try {
+        const app = initializeApp(firebaseConfig);
+        const remoteConfig = getRemoteConfig(app);
+
+        // Set fetch timeout & minimum fetch interval (0 during development/expo, default is 12 hours)
+        remoteConfig.settings.minimumFetchIntervalMillis = 0;
+
+        // Set default local config fallback
+        remoteConfig.defaultConfig = {
+          api_base_url: "https://locatrack.zalfyan.my.id/api"
+        };
+
+        // Fetch and activate configuration from Firebase
+        await fetchAndActivate(remoteConfig);
+        const remoteUrl = getValue(remoteConfig, 'api_base_url').asString();
+        if (remoteUrl) {
+          localStorage.setItem('natra_api_base_url', remoteUrl);
+          console.log('[RemoteConfig] API Base URL updated:', remoteUrl);
+        }
+      } catch (error) {
+        console.warn('[RemoteConfig] Gagal mengambil konfigurasi remote:', error);
+      }
+    }
+
+    async function loadRemoteConfigWithTimeout() {
+      const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000, 'timeout'));
+      const fetchPromise = loadRemoteConfig();
+      await Promise.race([fetchPromise, timeoutPromise]);
+    }
+
+    window.checkConnectionAndInit = async function () {
       const overlay = document.getElementById('offline-overlay');
 
       if (!navigator.onLine) {
@@ -193,6 +237,9 @@
 
       overlay.classList.remove('active');
 
+      // Fetch remote config (with a max timeout of 3s so the app doesn't hang)
+      await loadRemoteConfigWithTimeout();
+
       // Proceed with normal init
       setTimeout(() => {
         const isAuthenticated = Auth.isAuthenticated();
@@ -201,7 +248,7 @@
         } else {
           window.location.replace('./pages/login.html');
         }
-      }, 1500);
+      }, 1000);
     };
 
     // Initial check

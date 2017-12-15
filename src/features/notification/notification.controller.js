@@ -191,6 +191,10 @@ const NotificationController = {
       iconName = 'fingerprint';
       iconColor = 'text-emerald-500';
       iconBg = 'bg-emerald-50';
+    } else if (titleLower.includes('dispatch') || titleLower.includes('pengiriman') || titleLower.includes('armada')) {
+      iconName = 'truck';
+      iconColor = 'text-blue-500';
+      iconBg = 'bg-blue-50';
     } else if (titleLower.includes('tugas')) {
       iconName = 'clipboard-list';
       iconColor = 'text-amber-500';
