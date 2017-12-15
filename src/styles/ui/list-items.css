@@ -1,0 +1,17 @@
+/* ── List Items ───────────────────────────────────── */
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--sp-2);
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  transition: var(--ease);
+  border: 1px solid rgba(0,0,0,0.03);
+}
+.list-item:active { transform: scale(0.99); background: var(--gray-50); }
+
+

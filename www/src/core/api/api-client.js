@@ -5,9 +5,10 @@
 
 import { Storage } from '../storage/storage.js';
 
-// Detect current host to handle IP-based access (useful for mobile testing)
-const currentHost = window.location.hostname;
-const isIp = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(currentHost);
+// Uncomment the line below to test with local IP address if backend in cPanel is down
+// export const BASE_URL = 'http://192.168.100.50:8000/api';
+
+// Default to Production cPanel endpoint
 export const BASE_URL = 'https://locatrack.zalfyan.my.id/api';
 
 function _getLoginPath() {
@@ -32,7 +33,7 @@ function _isLoginPage() {
 async function request(endpoint, options = {}) {
   const token = Storage.getToken();
   const url = `${BASE_URL}${endpoint}`;
-  
+
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',

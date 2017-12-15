@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1017310577620",
+    "firebase_url": "https://locatrack-69ca3-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "locatrack-69ca3",
+    "storage_bucket": "locatrack-69ca3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017310577620:android:3ea320c2152fefa4958c41",
+        "android_client_info": {
+          "package_name": "com.locatrack.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzggZJqfSY4tFghEX8Lzk1ycmBp5284pI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

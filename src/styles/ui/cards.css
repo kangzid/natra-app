@@ -1,0 +1,54 @@
+/* ── Card ─────────────────────────────────────────── */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  box-shadow: none !important; /* Force remove shadow for clean look */
+  border: 1px solid rgba(0,0,0,0.06); /* iOS style: thin border */
+  transition: var(--ease);
+}
+
+.card:active {
+  background: rgba(0, 0, 0, 0.02); /* Subtle feedback */
+}
+
+.card-sm   { padding: var(--sp-3); }
+.card-lg   { padding: var(--sp-5) var(--sp-4); }
+
+.card-title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--gray-700);
+  margin-bottom: var(--sp-3);
+}
+
+/* Gradient card */
+.card-gradient {
+  background: var(--header-bg);
+  color: white;
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.card-gradient::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+
+.card-gradient::after {
+  content: '';
+  position: absolute;
+  bottom: -50px; left: -20px;
+  width: 160px; height: 160px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+
+

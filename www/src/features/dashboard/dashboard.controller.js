@@ -32,6 +32,24 @@ const DashboardController = {
     await this._loadDashboard();
     this._bindEvents();
     this._restoreTracking();
+    this._checkShortcuts();
+  },
+
+  _checkShortcuts() {
+    window.addEventListener('shortcut:gps', () => {
+      const gpsToggle = document.getElementById('gps-toggle');
+      // Only turn on if it's currently off
+      if (gpsToggle && !gpsToggle.checked) {
+        gpsToggle.click();
+      }
+    });
+    
+    const pending = localStorage.getItem('pending_shortcut');
+    if (pending === 'gps') {
+      localStorage.removeItem('pending_shortcut');
+      // Dispatch event to trigger the logic above
+      setTimeout(() => window.dispatchEvent(new CustomEvent('shortcut:gps')), 500);
+    }
   },
 
   _renderHeader() {

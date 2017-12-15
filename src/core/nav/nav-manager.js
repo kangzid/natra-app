@@ -42,6 +42,22 @@ const NavManager = {
       console.log('[NavManager] Navigating to Dashboard');
       window.location.href = CONFIG.HOME_PATH;
     });
+
+    // Listen for deep links (e.g. from App Shortcuts)
+    await App.addListener('appUrlOpen', async (data) => {
+      console.log('[NavManager] App URL Opened:', data.url);
+      if (data.url.includes('natra://shortcut/gps')) {
+         const path = window.location.pathname;
+         const fileName = path.split('/').pop() || 'index.html';
+         
+         if (fileName === CONFIG.HOME_PATH) {
+            window.dispatchEvent(new CustomEvent('shortcut:gps'));
+         } else {
+            localStorage.setItem('pending_shortcut', 'gps');
+            window.location.href = CONFIG.HOME_PATH;
+         }
+      }
+    });
   }
 };
 

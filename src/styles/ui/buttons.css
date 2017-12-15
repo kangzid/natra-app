@@ -1,0 +1,91 @@
+/* ── Buttons ──────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-5);
+  height: 48px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: var(--ease);
+  letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-block { width: 100%; }
+.btn-sm { height: 38px; font-size: var(--text-xs); padding: 0 var(--sp-4); }
+
+/* Primary */
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
+  color: white;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+}
+.btn-primary:hover { background: linear-gradient(135deg, var(--blue-700), var(--blue-600)); }
+.btn-primary:active { box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
+
+/* Success */
+.btn-success {
+  background: linear-gradient(135deg, #059669, var(--success));
+  color: white;
+  box-shadow: 0 4px 14px rgba(16,185,129,0.3);
+}
+.btn-success:hover { filter: brightness(0.95); }
+
+/* Warning */
+.btn-warning {
+  background: linear-gradient(135deg, #d97706, var(--warning));
+  color: white;
+  box-shadow: 0 4px 14px rgba(245,158,11,0.3);
+}
+
+/* Danger */
+.btn-danger {
+  background: linear-gradient(135deg, #dc2626, var(--danger));
+  color: white;
+  box-shadow: 0 4px 14px rgba(239,68,68,0.3);
+}
+
+/* Outline */
+.btn-outline {
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+  box-shadow: none;
+}
+.btn-outline:hover { background: var(--primary-light); }
+
+/* Ghost */
+.btn-ghost {
+  background: var(--gray-100);
+  color: var(--gray-700);
+}
+.btn-ghost:hover { background: var(--gray-200); }
+
+/* Icon button */
+.btn-icon {
+  width: 40px; height: 40px;
+  padding: 0;
+  border-radius: var(--radius-md);
+}
+
+/* Button spinner */
+.btn-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+

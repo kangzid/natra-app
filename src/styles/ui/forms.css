@@ -1,0 +1,79 @@
+/* ── Form Elements ────────────────────────────────── */
+.form-group {
+  margin-bottom: var(--sp-4);
+}
+
+.form-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: var(--sp-2);
+}
+
+.form-label .optional {
+  font-weight: 400;
+  color: var(--gray-400);
+  font-size: var(--text-xs);
+}
+
+.form-input {
+  width: 100%;
+  height: 52px;
+  padding: 0 var(--sp-5);
+  background: rgba(0, 0, 0, 0.03); /* iOS system gray 6 style */
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--gray-900);
+  transition: var(--ease);
+  outline: none;
+}
+
+.form-input::placeholder { color: var(--gray-400); }
+
+.form-input:focus {
+  background: white;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+textarea.form-input {
+  height: auto;
+  padding: var(--sp-3) var(--sp-4);
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.5;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap .form-input {
+  padding-right: 48px;
+}
+
+.input-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  transition: var(--ease);
+}
+.input-icon:hover { color: var(--gray-600); }
+
+.form-error {
+  font-size: var(--text-xs);
+  color: var(--danger-text);
+  margin-top: var(--sp-1);
+  font-weight: 500;
+}
+
+

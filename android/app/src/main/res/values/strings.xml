@@ -4,4 +4,6 @@
     <string name="title_activity_main">NATRA</string>
     <string name="package_name">com.natra.employee</string>
     <string name="custom_url_scheme">com.natra.employee</string>
+    <string name="shortcut_gps_short">GPS Karyawan</string>
+    <string name="shortcut_gps_long">Aktifkan GPS Tracking</string>
 </resources>
